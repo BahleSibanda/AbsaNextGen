@@ -1,4 +1,4 @@
-.counter {
+/*.counter {
   font-size: 16px;
   padding: 5px 10px;
   border-radius: 5px;
@@ -181,4 +181,15 @@
     right: 0;
     border-right-color: var(--border);
   }
+} */
+
+.app-container { 
+  display: flex;
+  background-color: bisque;
 }
+
+.main-content {
+  flex: 1;
+  padding: 24px;
+}
+
