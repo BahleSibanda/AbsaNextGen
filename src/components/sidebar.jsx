@@ -36,6 +36,6 @@ export default function SideBar() {
                 </ul>
             </nav>
             </div>
-    )
+    );
 }
             
