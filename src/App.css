@@ -181,16 +181,16 @@
     right: 0;
     border-right-color: var(--border);
   }
-} 
+}*/
 
 .app-container { 
   display: flex;
-  background-color: rgb(18, 18, 17);
+  background-color: rgb(205, 205, 199);
 }
 
 .main-content {
   flex: 1;
   padding: 24px;
+  overflow-y: auto;
 }
-  */
 

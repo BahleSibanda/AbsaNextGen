@@ -10,6 +10,23 @@ import KnowYourMoney from "./pages/knowyourMoney";
 import Learn from "./pages/learn";
 import "./App.css";
 
+function AppLayout() {
+  return (
+    <div className="app-container">
+      <Sidebar />
+      <div className="main-content">
+        <Routes>
+          <Route path="/Snapshot" element={<Moneysnapshot />} />
+          <Route path="/Tracks" element={<StrategyTracks />} />
+          <Route path="/Simulation" element={<KnowYourMoney />} />
+          <Route path="/Learn" element={<Learn />} />
+          <Route path="/Profile" element={<Profile />} />
+        </Routes>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
    return (
      <BrowserRouter>
