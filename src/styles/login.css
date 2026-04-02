@@ -1,0 +1,132 @@
+.login-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.login-left {
+  flex: 1;
+  background: #0f1923;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.login-brand {
+  text-align: center;
+}
+
+.login-logo {
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.login-logo span {
+  color: #C8102E;
+}
+
+.login-tagline {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+  font-style: italic;
+}
+
+.login-right {
+  flex: 1;
+  background: #f5f4f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #0f1923;
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 28px;
+}
+
+.login-field {
+  margin-bottom: 16px;
+}
+
+.login-field label {
+  display: block;
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.login-field input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 0.5px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  font-size: 13px;
+  background: #fafafa;
+  outline: none;
+  transition: border 0.15s;
+}
+
+.login-field input:focus {
+  border-color: #C8102E;
+  background: #fff;
+}
+
+.login-forgot {
+  font-size: 12px;
+  color: #C8102E;
+  text-align: right;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.login-btn {
+  width: 100%;
+  background: #C8102E;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.login-btn:hover {
+  background: #a00d24;
+}
+
+.login-register {
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-register span {
+  color: #C8102E;
+  cursor: pointer;
+  font-weight: 500;
+}
