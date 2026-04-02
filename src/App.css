@@ -185,7 +185,7 @@
 
 .app-container { 
   display: flex;
-  background-color: bisque;
+  background-color: rgb(18, 18, 17);
 }
 
 .main-content {

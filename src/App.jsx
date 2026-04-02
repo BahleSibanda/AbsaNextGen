@@ -1,10 +1,12 @@
 // import { useState } from 'react'
 
 import {BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/login";
+import Profile from "./pages/profile";
 import Sidebar from "./components/sidebar"; 
 import Moneysnapshot from "./pages/moneySnapshot"; 
-import strategyTracks from "./pages/strategyTracks"; 
-import KnowYourMoney from "./pages/knowYourney";
+import StrategyTracks from "./pages/strategyTracks";
+import KnowYourMoney from "./pages/knowyourMoney";
 import Learn from "./pages/learn";
 import "./App.css";
 
@@ -25,5 +27,5 @@ export default function App() {
        </div>
       </div>
 </BrowserRouter>
-) ;
+);
 }

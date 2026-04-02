@@ -18,7 +18,7 @@ const navPages = [
 
 export default function SideBar() {
     return (
-        <div className="sideBar">
+        <div className="sidebar">
             <h2>NextGen</h2>
             <nav>
                <ul>
