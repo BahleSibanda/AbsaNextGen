@@ -181,7 +181,7 @@
     right: 0;
     border-right-color: var(--border);
   }
-} */
+} 
 
 .app-container { 
   display: flex;
@@ -192,4 +192,5 @@
   flex: 1;
   padding: 24px;
 }
+  */
 
