@@ -1,35 +1,84 @@
-.sidebar{
-    width: 240px;
-    height: 100vh;
-    background-color: rgb(40, 97, 148);
-    border-right: 1px solid maroon;
-    padding: 240px;
-    display: flex;
-    flex-direction: column;
+.nw-sidebar {
+  width: 200px;
+  background: #0f1923;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
 
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 40px;
+.nw-logo {
+  font-size: 18px;
+  color: #fff;
+  padding: 0 20px 28px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
 }
 
-.nav-link {
-    display: flex;
-    align-items: center;
-    padding: 10px 0%;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    color: black;
-    text-decoration: none;
-    transition: 0.2s;
+.nw-logo span { color: #C8102E; }
+
+.nw-user-block {
+  padding: 0 20px 20px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.08);
+  margin-bottom: 12px;
 }
 
-.nav-link:hover {
-    background-color: rgb(154, 32, 32);
+.nw-user-label {
+  color: rgba(255,255,255,0.4);
+  font-size: 11px;
+  margin-bottom: 2px;
 }
 
-.nav-link.active {
-    background-color: gray;
-    color: rgb(49, 15, 15);
+.nw-user-name {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 8px;
 }
+
+.nw-track-pill {
+  display: inline-block;
+  background: rgba(200,16,46,0.15);
+  color: #f87d8a;
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 0.5px solid rgba(200,16,46,0.3);
+}
+
+.nw-nav-item {
+  display: block;
+  padding: 10px 20px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: all 0.15s ease;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.nw-nav-item:hover {
+  color: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.04);
+}
+
+.nw-nav-item.active {
+  color: #fff;
+  border-left-color: #C8102E;
+  background: rgba(255,255,255,0.06);
+  font-weight: 500;
+}
+
+.nw-nav-logout {
+  margin-top: auto;
+  padding: 10px 20px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  cursor: pointer;
+}
+
+.nw-nav-logout:hover { color: rgba(255,255,255,0.5); }
