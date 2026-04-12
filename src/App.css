@@ -183,9 +183,17 @@
   }
 }*/
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
 .app-container { 
   display: flex;
   background-color: rgb(205, 205, 199);
+  min-height: 100svh;
 }
 
 .main-content {
@@ -194,3 +202,7 @@
   overflow-y: auto;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+}
