@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Hammersmith+One&family=DM+Sans:wght@400;500&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+.sim-main { flex:1; padding:28px 32px 40px; background:#f5f4f0; min-height:100vh; font-family:'DM Sans',sans-serif; opacity:0; transform:translateY(10px); transition:opacity .35s ease,transform .35s ease; }
+.sim-main.sim-in { opacity:1; transform:translateY(0); }
+ 
+.sim-hero { margin-bottom:24px; }
+.sim-eyebrow { font-size:11px; font-weight:500; color:#C8102E; text-transform:uppercase; letter-spacing:1.2px; margin-bottom:6px; }
+.sim-title { font-family:'Hammersmith One',sans-serif; font-size:28px; color:#0f1923; margin-bottom:4px; }
+.sim-title span { color:#C8102E; }
+.sim-subline { font-size:13px; color:#aaa; }
+ 
+.sim-picker { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:20px; }
+.sim-pick-card { background:#fff; border-radius:14px; padding:18px; border:1.5px solid rgba(0,0,0,0.06); cursor:pointer; display:flex; align-items:flex-start; gap:14px; transition:all .2s; }
+.sim-pick-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,0.07); }
+.sim-pick-card.active { border-color:#C8102E; background:#fff9f9; box-shadow:0 0 0 3px rgba(200,16,46,0.1); }
+.sim-pick-icon { font-size:24px; flex-shrink:0; margin-top:2px; }
+.sim-pick-title { font-size:14px; font-weight:500; color:#0f1923; margin-bottom:4px; }
+.sim-pick-desc { font-size:12px; color:#999; line-height:1.5; }
+ 
+.sim-body { }
+.sim-fade { animation:simFade .25s ease; }
+ 
+.sim-layout { display:grid; grid-template-columns:320px 1fr; gap:16px; align-items:start; }
+ 
+.sim-inputs { background:#fff; border-radius:16px; padding:20px; border:0.5px solid rgba(0,0,0,0.06); position:sticky; top:20px; }
+.sim-inputs-title { font-size:11px; font-weight:500; color:#bbb; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:16px; }
+ 
+.sim-field { margin-bottom:14px; }
+.sim-field-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.sim-field label { font-size:12px; color:#666; font-weight:500; }
+.sim-field-val { font-size:12px; font-weight:500; color:#0f1923; }
+.sim-field input[type="range"] { width:100%; accent-color:#C8102E; height:4px; }
+.sim-field-range { display:flex; justify-content:space-between; font-size:10px; color:#ccc; margin-top:3px; }
+ 
+.sim-bond-box { background:#f5f4f0; border-radius:10px; padding:12px 14px; margin-top:16px; display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#888; }
+.sim-bond-box strong { color:#0f1923; font-size:14px; }
+ 
+.sim-outputs { display:flex; flex-direction:column; gap:14px; }
+.sim-result-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.sim-result-row.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.sim-result-card { background:#fff; border-radius:12px; padding:16px; border:0.5px solid rgba(0,0,0,0.06); }
+.sim-result-label { font-size:11px; color:#bbb; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px; }
+.sim-result-val { font-family:'Hammersmith One',sans-serif; font-size:22px; margin-bottom:4px; }
+.sim-result-note { font-size:11px; color:#bbb; font-style:italic; }
+ 
+.sim-verdict { padding:13px 16px; border-radius:10px; font-size:13px; font-weight:500; line-height:1.5; }
+.sim-verdict-buy  { background:#fdf0f2; color:#791F1F; border:0.5px solid rgba(200,16,46,0.2); }
+.sim-verdict-rent { background:#f0faea; color:#2d6a0f; border:0.5px solid rgba(29,158,117,0.2); }
+.sim-verdict-tie  { background:#f5f4f0; color:#555; border:0.5px solid rgba(0,0,0,0.08); }
+ 
+.sim-chart-card { background:#fff; border-radius:14px; padding:18px 20px; border:0.5px solid rgba(0,0,0,0.06); }
+.sim-chart-title { font-size:11px; font-weight:500; color:#bbb; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:14px; }
+ 
+.sim-tip { background:#0f1923; border-radius:8px; padding:10px 14px; min-width:160px; }
+.sim-tip-label { font-size:11px; color:rgba(255,255,255,0.5); margin-bottom:6px; }
+.sim-tip-row { display:flex; align-items:center; gap:6px; font-size:12px; color:#fff; margin-bottom:3px; }
+.sim-tip-row:last-child { margin-bottom:0; }
+.sim-tip-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+ 
+@keyframes simFade { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+@media (max-width:900px) { .sim-layout { grid-template-columns:1fr; } .sim-picker { grid-template-columns:1fr; } .sim-result-row.three { grid-template-columns:1fr 1fr; } .sim-main { padding:20px 16px; } }

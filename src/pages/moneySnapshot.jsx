@@ -69,6 +69,7 @@ function CountUp({ end, prefix = "R", suffix = "", duration = 1000 }) {
       setVal(Math.round((1 - Math.pow(1 - p, 3)) * end));
       if (p < 1) raf.current = requestAnimationFrame(step);
     };
+    
     raf.current = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf.current);
   }, [end, duration]);
