@@ -56,7 +56,7 @@ const topics = [
   {
     category: "Tax",
     color: "#EF9F27",
-    icon: "🧾",
+    icon: "",
     articles: [
       {
         title: "How income tax works in South Africa",
@@ -91,7 +91,7 @@ const topics = [
   {
     category: "Investing",
     color: "#1D9E75",
-    icon: "📈",
+    icon: "",
     articles: [
       {
         title: "What is an ETF and why does everyone recommend them?",
