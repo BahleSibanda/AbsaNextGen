@@ -6,7 +6,7 @@ export default function Login() {
 
   const handleLogin = (e) => {
     e.preventDefault();           // stops page from refreshing on submit
-    navigate("/Snapshot");        // takes user to the dashboard
+    navigate("/Onboard");      
   };
 
   return (

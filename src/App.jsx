@@ -17,7 +17,7 @@ function AppLayout() {
       <Sidebar />
       <div className="main-content">
         <Routes>
-          <Route path="/" element={<OnboardingQuiz/>} />
+          <Route path="/Onboard" element={<OnboardingQuiz/>} />
           <Route path="/Snapshot" element={<Moneysnapshot />} />
           <Route path="/Tracks" element={<StrategyTracks />} />
           <Route path="/Simulation" element={<KnowYourMoney />} />
