@@ -36,9 +36,9 @@ const spendingData = [
 ];
 
 const goals = [
-  { name: "Emergency fund",       current: 18000, target: 24000,  color: "#1D9E75", icon: "🛡" },
-  { name: "Property deposit",     current: 32000, target: 200000, color: ABSA_RED,  icon: "🏠" },
-  { name: "Investment portfolio", current: 20000, target: 100000, color: "#378ADD", icon: "📈" },
+  { name: "Emergency fund",       current: 18000, target: 24000,  color: "#1D9E75", icon: "" },
+  { name: "Property deposit",     current: 32000, target: 200000, color: ABSA_RED,  icon: "" },
+  { name: "Investment portfolio", current: 20000, target: 100000, color: "#378ADD", icon: "" },
 ];
 
 const nudges = [
