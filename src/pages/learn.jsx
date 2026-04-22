@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "../styles/learn.css";
  
+const ABSA_RED = "#C8102E";
+
 const topics = [
   {
     category: "Fundamentals",
@@ -158,7 +160,7 @@ const topics = [
   },
 ];
  
-const ABSA_RED = "#C8102E";
+
  
 function ArticleCard({ article, color, onClick }) {
   return (
