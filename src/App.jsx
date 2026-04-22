@@ -17,7 +17,6 @@ function AppLayout() {
       <Sidebar />
       <div className="main-content">
         <Routes>
-          <Route path="/Onboard" element={<OnboardingQuiz/>} />
           <Route path="/Snapshot" element={<Moneysnapshot />} />
           <Route path="/Tracks" element={<StrategyTracks />} />
           <Route path="/Simulation" element={<KnowYourMoney />} />
@@ -32,11 +31,14 @@ function AppLayout() {
 export default function App() {
    return (
      <BrowserRouter>
+     <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/Onboard" element={<OnboardingQuiz />} />
+     </Routes>
       <div className="app-container">
        <Sidebar />
        <div className="main-content">
          <Routes>
-           <Route path="/" element={<Login/>} />
            <Route path="/Tracks" element={<StrategyTracks />} />
            <Route path="/Simulation" element={<KnowYourMoney />} />
             <Route path="/Snapshot" element={<Moneysnapshot />} />
