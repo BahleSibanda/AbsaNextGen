@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Hammersmith+One&family=DM+Sans:wght@400;500&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+.ob-shell {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+}
+ 
+.ob-left {
+  width: 380px;
+  background: #0f1923;
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+}
+ 
+.ob-logo {
+  font-family: 'Hammersmith One', sans-serif;
+  font-size: 20px;
+  color: #fff;
+  margin-bottom: 40px;
+}
+.ob-logo span { color: #C8102E; }
+ 
+.ob-headline {
+  font-family: 'Hammersmith One', sans-serif;
+  font-size: 26px;
+  color: #fff;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+ 
+.ob-body {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+ 
+.ob-progress-bar {
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  height: 6px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+ 
+.ob-progress-fill {
+  height: 6px;
+  background: #C8102E;
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+ 
+.ob-step-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+}
+ 
+.ob-right {
+  flex: 1;
+  background: #f5f4f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+ 
+.ob-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 440px;
+  border: 0.5px solid rgba(0,0,0,0.06);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+}
+ 
+.ob-q {
+  font-family: 'Hammersmith One', sans-serif;
+  font-size: 20px;
+  color: #0f1923;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+ 
+.ob-input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  background: #fafaf8;
+  color: #0f1923;
+  margin-bottom: 20px;
+  transition: border-color 0.15s;
+}
+.ob-input:focus { border-color: #C8102E; background: #fff; }
+ 
+.ob-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+ 
+.ob-choice {
+  padding: 13px 16px;
+  border: 1.5px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  background: #fafaf8;
+  color: #555;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+.ob-choice:hover { border-color: #C8102E; color: #0f1923; background: #fff; }
+.ob-choice-selected { border-color: #C8102E !important; background: #fff9f9 !important; color: #C8102E !important; font-weight: 500; }
+ 
+.ob-next {
+  width: 100%;
+  background: #C8102E;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+  margin-bottom: 10px;
+}
+.ob-next:hover:not(:disabled) { background: #a00d24; transform: translateY(-1px); }
+.ob-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+ 
+.ob-back {
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  color: #aaa;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  padding: 4px 0;
+  width: 100%;
+}
+.ob-back:hover { color: #555; }
+ 
+@media (max-width: 700px) {
+  .ob-shell { flex-direction: column; }
+  .ob-left { width: 100%; padding: 32px 24px; }
+  .ob-right { padding: 24px 16px; }
+}

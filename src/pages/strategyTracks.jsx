@@ -7,7 +7,7 @@ const DARK_NAVY = "#0f1923";
 const tracks = [
   {
     id: "property",
-    icon: "🏠",
+    icon: "",
     name: "Property Builder",
     tagline: "Own your first home within 5 years",
     color: ABSA_RED,
@@ -24,7 +24,7 @@ const tracks = [
   },
   {
     id: "balanced",
-    icon: "⚖️",
+    icon: "",
     name: "Balanced Lifestyle",
     tagline: "Invest consistently, live well today",
     color: "#1D9E75",
@@ -41,7 +41,7 @@ const tracks = [
   },
   {
     id: "global",
-    icon: "🌍",
+    icon: "",
     name: "Global Investor",
     tagline: "Build wealth across international markets",
     color: "#378ADD",
@@ -234,12 +234,12 @@ export default function StrategyTracks() {
             <div className="st-detail-body st-fade">
               <div className="st-tips-grid">
                 {[
-                  { icon: "💡", tip: "Automate your savings on salary day so you never have the chance to spend it first." },
-                  { icon: "📊", tip: "Review your budget monthly — small adjustments early prevent big problems later." },
-                  { icon: "🏦", tip: "A Tax-Free Savings Account (TFSA) lets you invest R36 000/year with zero tax on returns." },
-                  { icon: "📈", tip: "ETFs (Exchange Traded Funds) are the lowest-cost way to invest in a diversified portfolio." },
-                  { icon: "🛡", tip: "Your emergency fund should cover 3–6 months of expenses before you invest aggressively." },
-                  { icon: "💳", tip: "Keeping your credit utilisation below 30% significantly improves your credit score." },
+                  { icon: "", tip: "Automate your savings on salary day so you never have the chance to spend it first." },
+                  { icon: "", tip: "Review your budget monthly — small adjustments early prevent big problems later." },
+                  { icon: "", tip: "A Tax-Free Savings Account (TFSA) lets you invest R36 000/year with zero tax on returns." },
+                  { icon: "", tip: "ETFs (Exchange Traded Funds) are the lowest-cost way to invest in a diversified portfolio." },
+                  { icon: "", tip: "Your emergency fund should cover 3–6 months of expenses before you invest aggressively." },
+                  { icon: "", tip: "Keeping your credit utilisation below 30% significantly improves your credit score." },
                 ].map((t, i) => (
                   <div key={i} className="st-tip-card" style={{ animationDelay: `${i * 0.08}s` }}>
                     <span className="st-tip-icon">{t.icon}</span>

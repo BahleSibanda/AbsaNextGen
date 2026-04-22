@@ -7,7 +7,7 @@ const topics = [
   {
     category: "Fundamentals",
     color: "#378ADD",
-    icon: "📚",
+    icon: "",
     articles: [
       {
         title: "How to read your payslip",
@@ -140,7 +140,7 @@ const topics = [
   {
     category: "Property",
     color: ABSA_RED,
-    icon: "🏠",
+    icon: "",
     articles: [
       {
         title: "How home loans work in South Africa",

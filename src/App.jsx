@@ -2,6 +2,7 @@
 
 import {BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/login";
+import OnboardingQuiz from "./pages/onboarding";
 import Profile from "./pages/profile";
 import Sidebar from "./components/sidebar"; 
 import Moneysnapshot from "./pages/moneySnapshot"; 
@@ -16,6 +17,7 @@ function AppLayout() {
       <Sidebar />
       <div className="main-content">
         <Routes>
+          <Route path="/" element={<OnboardingQuiz/>} />
           <Route path="/Snapshot" element={<Moneysnapshot />} />
           <Route path="/Tracks" element={<StrategyTracks />} />
           <Route path="/Simulation" element={<KnowYourMoney />} />

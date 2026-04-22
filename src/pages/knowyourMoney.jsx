@@ -108,9 +108,9 @@ function PropertySim() {
           </div>
         </div>
         <div className={`sim-verdict sim-verdict-${winner}`}>
-          {winner === "buy"  && `🏠 Buying wins over ${years} years by ${fmt(data[data.length-1]["Buy: equity"] - data[data.length-1]["Rent: portfolio"])}`}
-          {winner === "rent" && `📈 Renting + investing wins by ${fmt(data[data.length-1]["Rent: portfolio"] - data[data.length-1]["Buy: equity"])}`}
-          {winner === "tie"  && "⚖️ Both paths deliver similar outcomes — lifestyle preference wins here"}
+          {winner === "buy"  && ` Buying wins over ${years} years by ${fmt(data[data.length-1]["Buy: equity"] - data[data.length-1]["Rent: portfolio"])}`}
+          {winner === "rent" && ` Renting + investing wins by ${fmt(data[data.length-1]["Rent: portfolio"] - data[data.length-1]["Buy: equity"])}`}
+          {winner === "tie"  && " Both paths deliver similar outcomes — lifestyle preference wins here"}
         </div>
         <div className="sim-chart-card">
           <p className="sim-chart-title">Wealth comparison over {years} years</p>
@@ -182,8 +182,8 @@ function CarSim() {
         </div>
         <div className={`sim-verdict ${oppCost > 0 ? "sim-verdict-rent" : "sim-verdict-buy"}`}>
           {oppCost > 0
-            ? `📈 Investing the repayment instead would leave you ${fmt(oppCost)} richer`
-            : `🚗 The car retains more value in this scenario`}
+            ? ` Investing the repayment instead would leave you ${fmt(oppCost)} richer`
+            : ` The car retains more value in this scenario`}
         </div>
         <div className="sim-chart-card">
           <p className="sim-chart-title">Car value vs investment growth</p>
@@ -291,9 +291,9 @@ function InvestSim() {
 }
  
 const simulations = [
-  { id: "property", icon: "🏠", title: "Property vs Renting", desc: "Compare buying a home versus renting and investing the difference over time." },
-  { id: "car",      icon: "🚗", title: "Car vs Invest",       desc: "See how much wealth you give up by buying a luxury car instead of investing." },
-  { id: "invest",   icon: "📈", title: "Investment Growth",   desc: "Model your portfolio growth with different allocations between SA and global markets." },
+  { id: "property", icon: "", title: "Property vs Renting", desc: "Compare buying a home versus renting and investing the difference over time." },
+  { id: "car",      icon: "", title: "Car vs Invest",       desc: "See how much wealth you give up by buying a luxury car instead of investing." },
+  { id: "invest",   icon: "", title: "Investment Growth",   desc: "Model your portfolio growth with different allocations between SA and global markets." },
 ];
  
 export default function KnowYourMoney() {
