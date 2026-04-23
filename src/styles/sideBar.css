@@ -62,6 +62,10 @@
   position: relative;
 }
 
+.nw-sidebar-search {
+  padding: 12px 14px 0;
+}
+
 .nw-avatar {
   width: 36px; height: 36px;
   background: linear-gradient(135deg, #C8102E, #ff6b35);

@@ -3,7 +3,6 @@ import Login from "./pages/login";
 import OnboardingQuiz from "./pages/onboarding";
 import Profile from "./pages/profile";
 import Sidebar from "./components/sidebar";
-import Search from "./components/Search";
 import { ToastProvider } from "./components/Toast";
 import MoneySnapshot from "./pages/moneySnapshot";  // ← fixed name
 import StrategyTracks from "./pages/strategyTracks";
@@ -16,9 +15,8 @@ function AppLayout() {
     <div className="app-container">
       <Sidebar />
       <div className="main-content">
-        <Search />
         <Routes>
-          <Route path="/snapshot" element={<MoneySnapshot />} />   {/* ← lowercase */}
+          <Route path="/snapshot" element={<MoneySnapshot />} />
           <Route path="/tracks" element={<StrategyTracks />} />
           <Route path="/simulation" element={<KnowYourMoney />} />
           <Route path="/learn" element={<Learn />} />

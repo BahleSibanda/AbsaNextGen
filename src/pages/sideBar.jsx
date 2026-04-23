@@ -1,12 +1,13 @@
 import { NavLink } from 'react-router-dom';
+import Search from "../components/Search";
 import "../styles/sideBar.css";
 
 const navPages = [
-  { label: "Money Snapshot",  to: "/Snapshot",   icon: "◈" },
-  { label: "Strategy Tracks", to: "/Tracks",      icon: "◎" },
-  { label: "Know Your Money", to: "/Simulation",  icon: "◇" },
-  { label: "Learn",           to: "/Learn",       icon: "◉" },
-  { label: "Profile",         to: "/Profile",     icon: "◐" },
+  { label: "Money Snapshot",  to: "/snapshot",   icon: "◈" },
+  { label: "Strategy Tracks", to: "/tracks",      icon: "◎" },
+  { label: "Know Your Money", to: "/simulation",  icon: "◇" },
+  { label: "Learn",           to: "/learn",       icon: "◉" },
+  { label: "Profile",         to: "/profile",     icon: "◐" },
 ];
 
 export default function SideBar() {
@@ -35,6 +36,10 @@ export default function SideBar() {
           </p>
         </div>
         <div className="nw-status-dot" />
+      </div>
+
+      <div className="nw-sidebar-search">
+        <Search />
       </div>
 
       <nav className="nw-nav">
