@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, BarChart, Bar } from "recharts";
 import "../styles/moneySnapshot.css";
 
-/* ── swap this src for your real image ── */
 import heroPlaceholder from "../assets/hero-placeholder.jpg";
 
 const R   = "#C8102E";
@@ -132,20 +131,7 @@ export default function MoneySnapshot() {
 
         {/* ── Hero image slot ── */}
         <div className="ms-hero-img-slot">
-          {/*
-            TO ADD YOUR IMAGE:
-            1. Put your image file in src/assets/ folder
-            2. Import it at the top: import myImg from "../assets/my-image.jpg"
-            3. Replace the div below with: <img src={myImg} alt="hero" />
-            
-            Recommended size: 480×320px, any format (jpg/png/webp)
-            The slot is already styled — just drop in your <img> tag.
-          */}
-          <div className="ms-hero-img-placeholder">
-            <span className="ms-img-icon">🖼</span>
-            <span className="ms-img-label">Hero image</span>
-            <span className="ms-img-hint">480 × 320px recommended<br/>src/assets/ → import → replace this div</span>
-          </div>
+          <img src={heroPlaceholder} alt="hero" className="ms-hero-img" />
         </div>
       </div>
 
