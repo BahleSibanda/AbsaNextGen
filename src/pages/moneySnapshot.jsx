@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, BarChart, Bar } from "recharts";
 import "../styles/moneySnapshot.css";
-
 import heroPlaceholder from "../assets/hero-placeholder.jpg";
+
+export default function MoneySnapshot() {
+  return <div style={{ padding: 40, fontSize: 32 }}>MoneySnapshot works ✅</div>;
+}
 
 const R   = "#C8102E";
 const GRN = "#1D9E75";
