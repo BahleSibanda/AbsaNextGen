@@ -2,11 +2,11 @@ import { NavLink } from 'react-router-dom';
 import "../styles/sideBar.css";
 
 const navPages = [
-  { label: "Money Snapshot",  to: "/Snapshot",  icon: "◈", desc: "Dashboard" },
-  { label: "Strategy Tracks", to: "/Tracks",    icon: "◎", desc: "Your path" },
-  { label: "Know Your Money", to: "/Simulation",icon: "◇", desc: "Simulations" },
-  { label: "Learn",           to: "/Learn",     icon: "◉", desc: "Education" },
-  { label: "Profile",         to: "/Profile",   icon: "◐", desc: "Settings" },
+  { label: "Money Snapshot",  to: "/snapshot",    icon: "◈", desc: "Dashboard" },
+  { label: "Strategy Tracks", to: "/tracks",      icon: "◎", desc: "Your path" },
+  { label: "Know Your Money", to: "/simulation",  icon: "◇", desc: "Simulations" },
+  { label: "Learn",           to: "/learn",       icon: "◉", desc: "Education" },
+  { label: "Profile",         to: "/profile",     icon: "◐", desc: "Settings" },
 ];
 
 export default function SideBar() {
