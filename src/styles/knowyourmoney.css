@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Hammersmith+One&family=DM+Sans:wght@400;500&display=swap');
+@import "./design-system.css";
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
  
 .sim-main { flex:1; padding:28px 32px 40px; background:#f5f4f0; min-height:100vh; font-family:'DM Sans',sans-serif; opacity:0; transform:translateY(10px); transition:opacity .35s ease,transform .35s ease; }
 .sim-main.sim-in { opacity:1; transform:translateY(0); }

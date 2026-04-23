@@ -1,3 +1,5 @@
+ @import "./design-system.css";
+
 .login-shell {
   display: flex;
   min-height: 100vh;
