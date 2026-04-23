@@ -3,6 +3,8 @@ import Login from "./pages/login";
 import OnboardingQuiz from "./pages/onboarding";
 import Profile from "./pages/profile";
 import Sidebar from "./components/sidebar";
+import Search from "./components/Search";
+import { ToastProvider } from "./components/Toast";
 import MoneySnapshot from "./pages/moneySnapshot";  // ← fixed name
 import StrategyTracks from "./pages/strategyTracks";
 import KnowYourMoney from "./pages/knowyourMoney";
@@ -14,6 +16,7 @@ function AppLayout() {
     <div className="app-container">
       <Sidebar />
       <div className="main-content">
+        <Search />
         <Routes>
           <Route path="/snapshot" element={<MoneySnapshot />} />   {/* ← lowercase */}
           <Route path="/tracks" element={<StrategyTracks />} />
@@ -30,12 +33,14 @@ function AppLayout() {
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/onboard" element={<OnboardingQuiz />} />
-        <Route path="/*" element={<AppLayout />} />
-      </Routes>
+      <ToastProvider>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/onboard" element={<OnboardingQuiz />} />
+          <Route path="/*" element={<AppLayout />} />
+        </Routes>
+      </ToastProvider>
     </BrowserRouter>
   );
 }

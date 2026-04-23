@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../components/Toast";
 import "../styles/onboarding.css";
  
 const steps = [
@@ -28,6 +29,7 @@ export default function Onboarding() {
   const [answers, setAnswers] = useState({});
   const [val,     setVal]     = useState("");
   const navigate = useNavigate();
+  const { show } = useToast();
  
   const current = steps[step];
   const progress = ((step) / steps.length) * 100;
@@ -42,6 +44,7 @@ export default function Onboarding() {
       setStep(step + 1);
     } else {
       localStorage.setItem("nw_user", JSON.stringify(updated));
+      show("Great! Your onboarding answers were saved.", "success");
       navigate("/snapshot");
     }
   };

@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../components/Toast";
 import "../styles/login.css";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { show } = useToast();
 
   const handleLogin = (e) => {
     e.preventDefault();           // stops page from +refreshing on submit
+    show("Welcome back! Let's personalise your snapshot.", "success");
     navigate("/onboard");      
   };
 

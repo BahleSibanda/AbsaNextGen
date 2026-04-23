@@ -1,4 +1,7 @@
 import { useEffect, useState, useRef } from "react";
+import { useToast } from "../components/Toast";
+import InfoTip from "../components/InfoTip";
+import { calculateHealthScore, scoreLabel } from "../utils/healthScore";
 import "../styles/profile.css";
 
 const getUser = () => JSON.parse(localStorage.getItem("nw_user") || "{}");
@@ -9,6 +12,7 @@ export default function Profile() {
   const [lastSaved, setLastSaved] = useState(getUser());
   const [saving, setSaving] = useState(false);
   const saveTimeoutRef = useRef(null);
+  const { show } = useToast();
   const hasChanges = JSON.stringify(form) !== JSON.stringify(lastSaved);
 
   // Auto-save with 1.5s debounce
@@ -32,6 +36,7 @@ export default function Profile() {
     localStorage.removeItem("nw_user");
     setForm({});
     setLastSaved({});
+    show("Profile cleared — you can start fresh.", "warn");
   };
 
   // Calculate metrics
@@ -47,7 +52,9 @@ export default function Profile() {
   const savingsRate = salary > 0 ? Math.round((investments / salary) * 100) : 0;
   const netWorth = savings + emergencyFund;
   const monthlyObligations = rent + carFinance + studentLoan + investments;
-  const monthlyTax = salary * 0.20; // rough estimate
+  const monthlyTax = salary * 0.2; // rough estimate
+  const healthScore = calculateHealthScore({ salary, rent, carFinance, studentLoan, savings, investments, emergencyFund });
+  const scoreMeta = scoreLabel(healthScore);
 
   return (
     <main className="page-main page-in profile-page">
@@ -86,6 +93,10 @@ export default function Profile() {
             <strong style={{ color: savingsRate >= 20 ? "#1D9E75" : "#EF9F27" }}>{savingsRate}%</strong>
           </div>
           <div className="summary-row">
+            <span>Estimated tax</span>
+            <strong>{fmt(monthlyTax)}</strong>
+          </div>
+          <div className="summary-row">
             <span>Net worth</span>
             <strong>{fmt(netWorth)}</strong>
           </div>
@@ -108,6 +119,13 @@ export default function Profile() {
             <span>Monthly Investments</span>
             <strong>{fmt(investments)}</strong>
             <small>{Math.round((investments / salary) * 100) || 0}% of income</small>
+          </div>
+          <div className="metric-item">
+            <span>
+              Health score <InfoTip term="Health score" definition="A score based on savings, debt load, emergency cover and investment momentum." />
+            </span>
+            <strong style={{ color: scoreMeta.color }}>{healthScore} / 100</strong>
+            <small>{scoreMeta.label}</small>
           </div>
         </section>
 
