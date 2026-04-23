@@ -3,8 +3,8 @@
 
 .nw-sidebar {
   width: 230px;
-  background: #ffffff;
-  border-right: 0.5px solid rgba(0,0,0,0.07);
+  background: #120b0e;
+  border-right: 0.5px solid rgba(255,255,255,0.07);
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -13,7 +13,7 @@
   position: sticky;
   top: 0;
   height: 100vh;
-  box-shadow: 1px 0 12px rgba(0,0,0,0.04);
+  box-shadow: 1px 0 20px rgba(0,0,0,0.3);
   font-family: 'DM Sans', sans-serif;
 }
 
@@ -23,7 +23,7 @@
   align-items: center;
   gap: 10px;
   padding: 22px 20px 18px;
-  border-bottom: 0.5px solid rgba(0,0,0,0.05);
+  border-bottom: 0.5px solid rgba(255,255,255,0.06);
 }
 
 .nw-logo-mark {
@@ -34,7 +34,7 @@
   color: #fff;
   font-family: 'Syne', sans-serif;
   font-weight: 800; font-size: 16px;
-  box-shadow: 0 2px 8px rgba(200,16,46,0.3);
+  box-shadow: 0 2px 12px rgba(200,16,46,0.4);
   flex-shrink: 0;
 }
 
@@ -42,7 +42,7 @@
   display: block;
   font-family: 'Syne', sans-serif;
   font-size: 14px; font-weight: 700;
-  color: #1a1612; line-height: 1;
+  color: #f0ebe8; line-height: 1;
 }
 .nw-logo-tag {
   display: block;
@@ -55,9 +55,9 @@
 .nw-user-card {
   display: flex; align-items: center; gap: 10px;
   margin: 14px 14px 0;
-  padding: 12px 12px;
-  background: #f7f6f4;
-  border: 0.5px solid rgba(0,0,0,0.06);
+  padding: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(255,255,255,0.08);
   border-radius: 14px;
   position: relative;
 }
@@ -73,71 +73,74 @@
 }
 
 .nw-user-text { flex: 1; min-width: 0; }
-.nw-user-name  { font-size: 13px; font-weight: 500; color: #1a1612; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
-.nw-user-track { font-size: 10px; color: #9e9892; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nw-user-name  { font-size: 13px; font-weight: 500; color: #f0ebe8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+.nw-user-track { font-size: 10px; color: rgba(240,235,232,0.35); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .nw-status {
   width: 7px; height: 7px;
   border-radius: 50%;
   background: #1D9E75;
-  box-shadow: 0 0 6px rgba(29,158,117,0.6);
+  box-shadow: 0 0 6px rgba(29,158,117,0.7);
   flex-shrink: 0;
   animation: pulse 2s ease-in-out infinite;
 }
 @keyframes pulse {
   0%,100% { box-shadow: 0 0 6px rgba(29,158,117,0.5); }
-  50%      { box-shadow: 0 0 12px rgba(29,158,117,0.8); }
+  50%      { box-shadow: 0 0 14px rgba(29,158,117,0.9); }
 }
 
 /* nav */
 .nw-nav { flex: 1; padding: 16px 14px 0; display: flex; flex-direction: column; gap: 2px; }
-.nw-nav-label { font-size: 10px; font-weight: 600; color: #c0bdb8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; padding: 0 4px; }
+.nw-nav-label { font-size: 10px; font-weight: 600; color: rgba(240,235,232,0.2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; padding: 0 4px; }
 
 .nw-nav-item {
   display: flex; align-items: center; gap: 10px;
   padding: 9px 10px;
   border-radius: 12px;
   text-decoration: none;
-  color: #6b6560;
+  color: rgba(240,235,232,0.45);
   transition: all 0.15s ease;
   border: 0.5px solid transparent;
 }
-.nw-nav-item:hover { background: #f7f6f4; color: #1a1612; }
+.nw-nav-item:hover {
+  background: rgba(255,255,255,0.05);
+  color: #f0ebe8;
+}
 .nw-nav-item.active {
-  background: rgba(200,16,46,0.07);
-  color: #C8102E;
-  border-color: rgba(200,16,46,0.15);
+  background: rgba(200,16,46,0.12);
+  color: #ffaab8;
+  border-color: rgba(200,16,46,0.2);
 }
 .nw-nav-item.active .nw-nav-icon { color: #C8102E; }
 
-.nw-nav-icon { font-size: 14px; flex-shrink: 0; color: #c0bdb8; }
+.nw-nav-icon { font-size: 14px; flex-shrink: 0; color: rgba(240,235,232,0.2); }
 .nw-nav-text { flex: 1; min-width: 0; }
 .nw-nav-main { display: block; font-size: 13px; font-weight: 400; line-height: 1.2; }
 .nw-nav-item.active .nw-nav-main { font-weight: 500; }
-.nw-nav-desc { display: block; font-size: 10px; color: #c0bdb8; margin-top: 1px; }
+.nw-nav-desc { display: block; font-size: 10px; color: rgba(240,235,232,0.2); margin-top: 1px; }
 .nw-nav-item.active .nw-nav-desc { color: rgba(200,16,46,0.5); }
 
 /* footer */
 .nw-sidebar-footer { padding: 14px; }
 
 .nw-progress-card {
-  background: #f7f6f4;
-  border: 0.5px solid rgba(0,0,0,0.06);
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(255,255,255,0.08);
   border-radius: 14px;
   padding: 14px;
   margin-bottom: 8px;
 }
 .nw-progress-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.nw-progress-title { font-size: 12px; font-weight: 600; color: #1a1612; font-family: 'Syne', sans-serif; }
+.nw-progress-title { font-size: 12px; font-weight: 600; color: #f0ebe8; font-family: 'Syne', sans-serif; }
 .nw-progress-pct   { font-size: 11px; font-weight: 500; color: #C8102E; }
-.nw-progress-track { height: 5px; background: rgba(0,0,0,0.06); border-radius: 10px; overflow: hidden; margin-bottom: 6px; }
+.nw-progress-track { height: 5px; background: rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden; margin-bottom: 6px; }
 .nw-progress-fill  { height: 5px; background: linear-gradient(90deg, #C8102E, #ff6b35); border-radius: 10px; transition: width 0.6s ease; }
-.nw-progress-sub   { font-size: 10px; color: #9e9892; line-height: 1.4; }
+.nw-progress-sub   { font-size: 10px; color: rgba(240,235,232,0.3); line-height: 1.4; }
 
 .nw-logout {
   display: flex; align-items: center; gap: 8px;
   padding: 9px 10px; border-radius: 10px;
-  font-size: 12px; color: #9e9892;
+  font-size: 12px; color: rgba(240,235,232,0.3);
   text-decoration: none; transition: all 0.15s;
 }
-.nw-logout:hover { background: #fdf0f2; color: #C8102E; }
+.nw-logout:hover { background: rgba(200,16,46,0.1); color: #ffaab8; }

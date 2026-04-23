@@ -3,10 +3,6 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAx
 import "../styles/moneySnapshot.css";
 import heroPlaceholder from "../assets/hero-placeholder.jpg";
 
-export default function MoneySnapshot() {
-  return <div style={{ padding: 40, fontSize: 32 }}>MoneySnapshot works ✅</div>;
-}
-
 const R   = "#C8102E";
 const GRN = "#1D9E75";
 const BLU = "#2563EB";
@@ -105,8 +101,6 @@ export default function MoneySnapshot() {
 
   return (
     <main className={`ms-main ${on?"ms-on":""}`}>
-
-      {/* ══ HERO with image ══ */}
       <div className="ms-hero">
         <div className="ms-hero-content">
           <span className="ms-eyebrow">April 2026</span>
@@ -131,14 +125,11 @@ export default function MoneySnapshot() {
             </div>
           </div>
         </div>
-
-        {/* ── Hero image slot ── */}
         <div className="ms-hero-img-slot">
           <img src={heroPlaceholder} alt="hero" className="ms-hero-img" />
         </div>
       </div>
 
-      {/* ══ STAT CARDS ══ */}
       <div className="ms-stats">
         {[
           { label:"Monthly income",    end:salary, pre:"R", suf:"",  tag:"gross",           tc:"neutral", delay:0 },
@@ -154,7 +145,6 @@ export default function MoneySnapshot() {
         ))}
       </div>
 
-      {/* ══ TABS ══ */}
       <div className="ms-tabs">
         {["overview","spending","goals","activity"].map(t=>(
           <button key={t} className={`ms-tab${tab===t?" ms-tab-on":""}`} onClick={()=>setTab(t)}>
@@ -163,11 +153,9 @@ export default function MoneySnapshot() {
         ))}
       </div>
 
-      {/* ══ OVERVIEW ══ */}
       {tab==="overview" && (
         <div className="ms-content ms-anim">
           <div className="ms-grid">
-
             <div className="ms-g-wide ms-card">
               <div className="ms-card-head"><span className="ms-card-title">Net worth growth</span><span className="ms-badge ms-badge-green">+R19 200 YTD</span></div>
               <ResponsiveContainer width="100%" height={160}>
@@ -218,7 +206,6 @@ export default function MoneySnapshot() {
         </div>
       )}
 
-      {/* ══ SPENDING ══ */}
       {tab==="spending" && (
         <div className="ms-content ms-anim">
           <div className="ms-grid">
@@ -268,7 +255,6 @@ export default function MoneySnapshot() {
         </div>
       )}
 
-      {/* ══ GOALS ══ */}
       {tab==="goals" && (
         <div className="ms-content ms-anim">
           <div className="ms-grid">
@@ -295,7 +281,6 @@ export default function MoneySnapshot() {
         </div>
       )}
 
-      {/* ══ ACTIVITY ══ */}
       {tab==="activity" && (
         <div className="ms-content ms-anim">
           <div className="ms-grid">
