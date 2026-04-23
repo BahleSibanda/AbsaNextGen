@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, BarChart, Bar } from "recharts";
 import "../styles/moneySnapshot.css";
 import heroPlaceholder from "../assets/hero-placeholder.jpg";
@@ -72,6 +73,7 @@ export default function MoneySnapshot() {
   const [tab,setTab]=useState("overview");
   const [sl,setSl]=useState(null);
   const [on,setOn]=useState(false);
+  const navigate = useNavigate();
   const user = getUser();
  
   // ── Pull real data from onboarding ──
@@ -367,7 +369,7 @@ export default function MoneySnapshot() {
         </div>
       )}
  
-      <button className="ms-cta">Open Simulation Lab — Property vs Renting →</button>
+      <button className="ms-cta" onClick={() => navigate("/simulation")}>Open Simulation Lab — Property vs Renting →</button>
     </main>
   );
 }
