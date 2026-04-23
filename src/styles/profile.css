@@ -31,6 +31,59 @@
   box-shadow: var(--shadow-sm);
 }
 
+.profile-card.profile-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.metric-item {
+  background: var(--surface-3);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--r-md);
+  padding: 18px;
+}
+
+.metric-item span {
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.metric-item strong {
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.metric-item small {
+  color: var(--text-tertiary);
+}
+
+.profile-status {
+  align-self: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.profile-status.saving {
+  color: var(--amber);
+}
+
+.profile-status.saved {
+  color: var(--green);
+}
+
+.profile-form .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.profile-form .form-row:nth-last-child(-n+2) {
+  grid-column: 1 / -1;
+}
+
 .profile-card h2 {
   margin-bottom: 20px;
   font-family: var(--font-display);
