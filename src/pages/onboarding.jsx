@@ -16,9 +16,9 @@ const steps = [
     q: "What's your main financial goal?",
     type: "choice",
     options: [
-      " Buy property within 5 years",
-      " Balance lifestyle and investing",
-      " Build a global investment portfolio",
+      "Buy property within 5 years",
+      "Balance lifestyle and investing",
+      "Build a global investment portfolio",
     ],
   },
 ];
@@ -34,14 +34,15 @@ export default function Onboarding() {
  
   const next = () => {
     if (!val) return;
-    const updated = { ...answers, [current.key]: val };
+    const normalized = typeof val === "string" ? val.trim() : val;
+    const updated = { ...answers, [current.key]: normalized };
     setAnswers(updated);
     setVal("");
     if (step < steps.length - 1) {
       setStep(step + 1);
     } else {
       localStorage.setItem("nw_user", JSON.stringify(updated));
-      navigate("/Snapshot");
+      navigate("/snapshot");
     }
   };
  

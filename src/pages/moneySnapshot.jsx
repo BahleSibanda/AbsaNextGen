@@ -83,8 +83,12 @@ export default function MoneySnapshot() {
   const carFin   = Number(user.carFinance)   || 6500;
   const studLoan = Number(user.studentLoan)  || 2500;
   const invest   = Number(user.investments)  || 4000;
-  const trackRaw = user.track || " Buy property within 5 years";
-  const trackLabel = trackRaw.replace(/^[^\s]+\s/, "").trim();
+  const trackRaw = (user.track || "Buy property within 5 years").trim();
+  const trackLabel = trackRaw === "Buy property within 5 years"
+    ? "Property Builder"
+    : trackRaw === "Balance lifestyle and investing"
+      ? "Balanced Investor"
+      : "Global Investor";
  
   // ── Derived figures ──
   const totalExpenses  = rent + carFin + studLoan + invest + (salary * 0.17); // living estimate
