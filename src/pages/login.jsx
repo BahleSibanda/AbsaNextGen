@@ -5,8 +5,8 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
-    e.preventDefault();           // stops page from refreshing on submit
-    navigate("/Onboard");      
+    e.preventDefault();           // stops page from +refreshing on submit
+    navigate("/onboard");      
   };
 
   return (

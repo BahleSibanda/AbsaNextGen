@@ -30,7 +30,12 @@ function AppLayout() {
 function App() {
   return (
     <BrowserRouter>
-      <AppLayout />
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/onboard" element={<OnboardingQuiz />} />
+        <Route path="/*" element={<AppLayout />} />
+      </Routes>
     </BrowserRouter>
   );
 }

@@ -48,16 +48,17 @@ export default function Onboarding() {
   const handleKey = (e) => { if (e.key === "Enter") next(); };
  
   return (
-    <div className="ob-shell">
-      <div className="ob-left">
-        <div className="ob-logo">absa <span>|</span> nextgen</div>
-        <h2 className="ob-headline">Let's build your financial snapshot</h2>
-        <p className="ob-body">Answer {steps.length} quick questions and we'll personalise your entire experience.</p>
-        <div className="ob-progress-bar">
-          <div className="ob-progress-fill" style={{ width: `${progress}%` }} />
+    <main className="page-main page-in">
+      <div className="ob-shell">
+        <div className="ob-left">
+          <div className="ob-logo">absa <span>|</span> nextgen</div>
+          <h1 className="page-title">Let's build your financial snapshot</h1>
+          <p className="page-subtitle">Answer {steps.length} quick questions and we'll personalise your entire experience.</p>
+          <div className="ob-progress-bar">
+            <div className="ob-progress-fill" style={{ width: `${progress}%` }} />
+          </div>
+          <p className="ob-step-label">{step + 1} of {steps.length}</p>
         </div>
-        <p className="ob-step-label">{step + 1} of {steps.length}</p>
-      </div>
  
       <div className="ob-right">
         <div className="ob-card">
@@ -97,6 +98,7 @@ export default function Onboarding() {
         </div>
       </div>
     </div>
+  </main>
   );
 }
  

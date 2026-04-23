@@ -2,48 +2,26 @@ import { useState, useEffect, useRef } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, AreaChart, Area, XAxis, YAxis, CartesianGrid, BarChart, Bar } from "recharts";
 import "../styles/moneySnapshot.css";
 import heroPlaceholder from "../assets/hero-placeholder.jpg";
-
+ 
 const R   = "#C8102E";
 const GRN = "#1D9E75";
 const BLU = "#2563EB";
 const AMB = "#EF9F27";
-
+const PUR = "#7C3AED";
+ 
 const getUser = () => JSON.parse(localStorage.getItem("nw_user") || "{}");
-
+const fmt = (n) => `R${Math.round(n).toLocaleString("en-ZA")}`;
+const pct  = (c, t) => Math.round((c / t) * 100);
+ 
 const wealthHistory = [
   { m:"Nov", v:28000 },{ m:"Dec", v:31000 },{ m:"Jan", v:34500 },
   { m:"Feb", v:38000 },{ m:"Mar", v:42000 },{ m:"Apr", v:47200 },
 ];
-const spendData = [
-  { name:"Rent/Bond", value:12000, color:R,   pct:32 },
-  { name:"Car",       value:6500,  color:AMB,  pct:17 },
-  { name:"Living",    value:8000,  color:BLU,  pct:21 },
-  { name:"Loan",      value:2500,  color:"#7C3AED", pct:7 },
-  { name:"Savings",   value:8800,  color:GRN,  pct:23 },
-];
-const goals = [
-  { name:"Emergency fund",  current:18000, target:24000,  color:GRN, icon:"🛡" },
-  { name:"Property deposit", current:32000, target:200000, color:R,   icon:"🏠" },
-  { name:"Investments",      current:20000, target:100000, color:BLU, icon:"📈" },
-];
-const nudges = [
-  { type:"success", dot:GRN, text:"Emergency fund 75% complete! Keep adding R2 000/month." },
-  { type:"warn",    dot:AMB, text:"Savings rate below 20% — redirect R500 from entertainment." },
-  { type:"info",    dot:BLU, text:"Property Builder — 2 months in. Review deposit milestone." },
-];
-const activity = [
-  { label:"Salary deposit",    amount:"+R48 000", date:"01 Apr", pos:true },
-  { label:"Discovery Medical", amount:"-R2 800",  date:"02 Apr", pos:false },
-  { label:"FNB Car Finance",   amount:"-R6 500",  date:"03 Apr", pos:false },
-  { label:"ETF Investment",    amount:"-R4 000",  date:"05 Apr", pos:false },
-  { label:"Freelance income",  amount:"+R5 000",  date:"08 Apr", pos:true },
-];
-const fmt = (n) => `R${Math.round(n).toLocaleString("en-ZA")}`;
-const pct  = (c,t) => Math.round((c/t)*100);
-
+ 
 function CountUp({ end, pre="R", suf="", dur=1000 }) {
   const [v,setV]=useState(0); const raf=useRef(); const t0=useRef();
   useEffect(()=>{
+    t0.current = null;
     const step=ts=>{
       if(!t0.current) t0.current=ts;
       const p=Math.min((ts-t0.current)/dur,1);
@@ -55,7 +33,7 @@ function CountUp({ end, pre="R", suf="", dur=1000 }) {
   },[end,dur]);
   return <>{pre}{v.toLocaleString("en-ZA")}{suf}</>;
 }
-
+ 
 function GoalBar({ name, current, target, color, icon, delay=0 }) {
   const [w,setW]=useState(0); const p=pct(current,target);
   useEffect(()=>{ const t=setTimeout(()=>setW(p),delay+300); return ()=>clearTimeout(t); },[p,delay]);
@@ -73,7 +51,7 @@ function GoalBar({ name, current, target, color, icon, delay=0 }) {
     </div>
   );
 }
-
+ 
 function Nudge({ type, dot, text, i }) {
   const [gone,setGone]=useState(false);
   if(gone) return null;
@@ -85,42 +63,114 @@ function Nudge({ type, dot, text, i }) {
     </div>
   );
 }
-
+ 
 const Tip = ({ active, payload, label }) => active&&payload?.length ? (
   <div className="ms-tip"><div className="ms-tip-l">{label??payload[0].name}</div><div className="ms-tip-v">{fmt(payload[0].value)}</div></div>
 ) : null;
-
+ 
 export default function MoneySnapshot() {
   const [tab,setTab]=useState("overview");
   const [sl,setSl]=useState(null);
   const [on,setOn]=useState(false);
-  const user=getUser();
-  const name=user.name||"there";
-  const salary=Number(user.salary)||48000;
+  const user = getUser();
+ 
+  // ── Pull real data from onboarding ──
+  const name     = user.name     || "there";
+  const salary   = Number(user.salary)       || 48000;
+  const rent     = Number(user.rent)         || 12000;
+  const savings  = Number(user.savings)      || 20000;
+  const emergency= Number(user.emergencyFund)|| 18000;
+  const carFin   = Number(user.carFinance)   || 6500;
+  const studLoan = Number(user.studentLoan)  || 2500;
+  const invest   = Number(user.investments)  || 4000;
+  const trackRaw = user.track || " Buy property within 5 years";
+  const trackLabel = trackRaw.replace(/^[^\s]+\s/, "").trim();
+ 
+  // ── Derived figures ──
+  const totalExpenses  = rent + carFin + studLoan + invest + (salary * 0.17); // living estimate
+  const disposable     = salary - totalExpenses;
+  const savingsRate    = Math.round((invest / salary) * 100);
+  const netWorth       = savings + emergency + (invest * 6);
+  const emergencyTarget= salary * 3;
+  const depositTarget  = 200000;
+  const investTarget   = 100000;
+ 
+  // ── Dynamic spend breakdown ──
+  const living = Math.max(salary - rent - carFin - studLoan - invest, 0);
+  const spendTotal = rent + carFin + living + studLoan + invest;
+  const spendData = [
+    { name:"Rent/Bond", value:rent,     color:R,   pct:Math.round((rent/spendTotal)*100) },
+    { name:"Car",       value:carFin,   color:AMB, pct:Math.round((carFin/spendTotal)*100) },
+    { name:"Living",    value:living,   color:BLU, pct:Math.round((living/spendTotal)*100) },
+    { name:"Loan",      value:studLoan, color:PUR, pct:Math.round((studLoan/spendTotal)*100) },
+    { name:"Savings",   value:invest,   color:GRN, pct:Math.round((invest/spendTotal)*100) },
+  ].filter(d => d.value > 0);
+ 
+  // ── Dynamic goals ──
+  const goals = [
+    { name:"Emergency fund",   current:emergency, target:emergencyTarget, color:GRN, icon:"" },
+    { name:"Property deposit", current:savings,   target:depositTarget,   color:R,   icon:"" },
+    { name:"Investments",      current:invest*6,  target:investTarget,    color:BLU, icon:"" },
+  ];
+ 
+  // ── Dynamic nudges ──
+  const nudges = [];
+  if (emergency >= emergencyTarget)
+    nudges.push({ type:"success", dot:GRN, text:`Emergency fund complete at ${fmt(emergency)}! Great discipline.` });
+  else
+    nudges.push({ type:"warn", dot:AMB, text:`Emergency fund is ${pct(emergency,emergencyTarget)}% complete. Target: ${fmt(emergencyTarget)}.` });
+  if (savingsRate < 20)
+    nudges.push({ type:"warn", dot:AMB, text:`Savings rate is ${savingsRate}% — try redirecting more to hit 20%.` });
+  else
+    nudges.push({ type:"success", dot:GRN, text:`Great savings rate of ${savingsRate}%! Keep it up.` });
+  nudges.push({ type:"info", dot:BLU, text:`${trackLabel} track active — stay consistent with your monthly targets.` });
+ 
+  // ── Activity (use real salary) ──
+  const activity = [
+    { label:"Salary deposit",    amount:`+${fmt(salary)}`, date:"01 Apr", pos:true },
+    { label:"Rent / Bond",       amount:`-${fmt(rent)}`,   date:"02 Apr", pos:false },
+    { label:"Car Finance",       amount:`-${fmt(carFin)}`, date:"03 Apr", pos:false },
+    { label:"ETF Investment",    amount:`-${fmt(invest)}`, date:"05 Apr", pos:false },
+    { label:"Student Loan",      amount:`-${fmt(studLoan)}`,date:"06 Apr",pos:false },
+  ].filter(a => !a.amount.includes("R0"));
+ 
+  // ── Health score (simple formula) ──
+  const healthScore = Math.min(100, Math.round(
+    (savingsRate >= 20 ? 25 : savingsRate * 1.25) +
+    (emergency >= emergencyTarget ? 25 : pct(emergency, emergencyTarget) * 0.25) +
+    (disposable > 0 ? 25 : 0) +
+    (savings > 10000 ? 25 : savings / 400)
+  ));
+ 
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+ 
   useEffect(()=>{ setTimeout(()=>setOn(true),80); },[]);
-
+ 
   return (
     <main className={`ms-main ${on?"ms-on":""}`}>
+ 
+      {/* ══ HERO ══ */}
       <div className="ms-hero">
         <div className="ms-hero-content">
           <span className="ms-eyebrow">April 2026</span>
-          <h1 className="ms-hello">Good evening, <span>{name}</span></h1>
-          <p className="ms-sub">Property Builder track · here's your financial snapshot</p>
+          <h1 className="ms-hello">{greeting}, <span>{name}</span></h1>
+          <p className="ms-sub">{trackLabel} · here's your financial snapshot</p>
           <div className="ms-hero-pills">
-            <span className="ms-pill ms-pill-red">Property Builder</span>
+            <span className="ms-pill ms-pill-red">{trackLabel}</span>
             <span className="ms-pill ms-pill-green">● Active</span>
             <span className="ms-pill ms-pill-grey">Year 1 of 5</span>
           </div>
           <div className="ms-hero-score">
             <svg width="72" height="72" viewBox="0 0 72 72">
-              <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="7"/>
+              <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="7"/>
               <circle cx="36" cy="36" r="28" fill="none" stroke={R} strokeWidth="7"
-                strokeDasharray={`${(72/100)*175.9} 175.9`} strokeLinecap="round"
+                strokeDasharray={`${(healthScore/100)*175.9} 175.9`} strokeLinecap="round"
                 transform="rotate(-90 36 36)" style={{transition:"stroke-dasharray 1.2s ease .3s"}}/>
-              <text x="36" y="41" textAnchor="middle" fontSize="15" fontWeight="700" fill="#1a1612" fontFamily="Syne">72</text>
+              <text x="36" y="41" textAnchor="middle" fontSize="15" fontWeight="700" fill="#f0ebe8" fontFamily="Syne">{healthScore}</text>
             </svg>
             <div>
-              <span className="ms-score-label">Good</span>
+              <span className="ms-score-label">{healthScore >= 75 ? "Great" : healthScore >= 50 ? "Good" : "Fair"}</span>
               <span className="ms-score-sub">health score</span>
             </div>
           </div>
@@ -129,13 +179,14 @@ export default function MoneySnapshot() {
           <img src={heroPlaceholder} alt="hero" className="ms-hero-img" />
         </div>
       </div>
-
+ 
+      {/* ══ STAT CARDS ══ */}
       <div className="ms-stats">
         {[
-          { label:"Monthly income",    end:salary, pre:"R", suf:"",  tag:"gross",           tc:"neutral", delay:0 },
-          { label:"Disposable income", end:10200,  pre:"R", suf:"",  tag:"+R800 vs last mo", tc:"pos",    delay:80 },
-          { label:"Savings rate",      end:15,     pre:"",  suf:"%", tag:"target is 20%",   tc:"neg",    delay:160 },
-          { label:"Net worth",         end:47200,  pre:"R", suf:"",  tag:"↑ +R19 200 YTD",  tc:"pos",    delay:240 },
+          { label:"Monthly income",    end:salary,      pre:"R", suf:"",  tag:"gross salary",          tc:"neutral", delay:0 },
+          { label:"Disposable income", end:Math.max(0,disposable), pre:"R", suf:"", tag:disposable>0?`after expenses`:"tight this month", tc:disposable>0?"pos":"neg", delay:80 },
+          { label:"Savings rate",      end:savingsRate, pre:"",  suf:"%", tag:savingsRate>=20?"on target":"target is 20%", tc:savingsRate>=20?"pos":"neg", delay:160 },
+          { label:"Net worth",         end:netWorth,    pre:"R", suf:"",  tag:"estimated total",       tc:"pos",     delay:240 },
         ].map(s=>(
           <div className="ms-stat" key={s.label} style={{animationDelay:`${s.delay}ms`}}>
             <p className="ms-stat-label">{s.label}</p>
@@ -144,7 +195,8 @@ export default function MoneySnapshot() {
           </div>
         ))}
       </div>
-
+ 
+      {/* ══ TABS ══ */}
       <div className="ms-tabs">
         {["overview","spending","goals","activity"].map(t=>(
           <button key={t} className={`ms-tab${tab===t?" ms-tab-on":""}`} onClick={()=>setTab(t)}>
@@ -152,12 +204,13 @@ export default function MoneySnapshot() {
           </button>
         ))}
       </div>
-
+ 
+      {/* ══ OVERVIEW ══ */}
       {tab==="overview" && (
         <div className="ms-content ms-anim">
           <div className="ms-grid">
             <div className="ms-g-wide ms-card">
-              <div className="ms-card-head"><span className="ms-card-title">Net worth growth</span><span className="ms-badge ms-badge-green">+R19 200 YTD</span></div>
+              <div className="ms-card-head"><span className="ms-card-title">Net worth growth</span><span className="ms-badge ms-badge-green">+{fmt(netWorth-28000)} YTD</span></div>
               <ResponsiveContainer width="100%" height={160}>
                 <AreaChart data={wealthHistory} margin={{top:4,right:4,bottom:0,left:0}}>
                   <defs>
@@ -166,35 +219,39 @@ export default function MoneySnapshot() {
                       <stop offset="95%" stopColor={R} stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)"/>
-                  <XAxis dataKey="m" tick={{fontSize:11,fill:"#9e9892"}} axisLine={false} tickLine={false}/>
-                  <YAxis tickFormatter={v=>`R${v/1000}k`} tick={{fontSize:10,fill:"#9e9892"}} axisLine={false} tickLine={false} width={44}/>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)"/>
+                  <XAxis dataKey="m" tick={{fontSize:11,fill:"rgba(240,235,232,0.4)"}} axisLine={false} tickLine={false}/>
+                  <YAxis tickFormatter={v=>`R${v/1000}k`} tick={{fontSize:10,fill:"rgba(240,235,232,0.4)"}} axisLine={false} tickLine={false} width={44}/>
                   <Tooltip content={<Tip/>}/>
                   <Area type="monotone" dataKey="v" stroke={R} strokeWidth={2.5} fill="url(#ag)" dot={{r:4,fill:R,strokeWidth:0}} activeDot={{r:5}}/>
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-
+ 
             <div className="ms-g-half ms-card">
               <div className="ms-card-head"><span className="ms-card-title">Monthly spend</span></div>
               <ResponsiveContainer width="100%" height={130}>
-                <BarChart data={[{m:"Nov",v:34200},{m:"Dec",v:39800},{m:"Jan",v:36100},{m:"Feb",v:37500},{m:"Mar",v:35900},{m:"Apr",v:37800}]} barSize={16} margin={{top:4,right:0,bottom:0,left:0}}>
-                  <XAxis dataKey="m" tick={{fontSize:10,fill:"#9e9892"}} axisLine={false} tickLine={false}/>
+                <BarChart data={[
+                  {m:"Nov",v:Math.round(spendTotal*0.92)},{m:"Dec",v:Math.round(spendTotal*1.07)},
+                  {m:"Jan",v:Math.round(spendTotal*0.97)},{m:"Feb",v:Math.round(spendTotal*1.01)},
+                  {m:"Mar",v:Math.round(spendTotal*0.96)},{m:"Apr",v:spendTotal}
+                ]} barSize={16} margin={{top:4,right:0,bottom:0,left:0}}>
+                  <XAxis dataKey="m" tick={{fontSize:10,fill:"rgba(240,235,232,0.4)"}} axisLine={false} tickLine={false}/>
                   <YAxis hide/>
                   <Tooltip content={<Tip/>}/>
                   <Bar dataKey="v" radius={[5,5,0,0]}>
-                    {[0,1,2,3,4,5].map(i=><Cell key={i} fill={i===5?R:"#e8e5e1"}/>)}
+                    {[0,1,2,3,4,5].map(i=><Cell key={i} fill={i===5?R:"rgba(255,255,255,0.08)"}/>)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
-              <p className="ms-card-foot">Apr: <strong style={{color:R}}>R37 800</strong> — similar to last month</p>
+              <p className="ms-card-foot">Apr: <strong style={{color:R}}>{fmt(spendTotal)}</strong></p>
             </div>
-
+ 
             <div className="ms-g-half ms-card">
               <div className="ms-card-head"><span className="ms-card-title">Nudges</span></div>
               {nudges.map((n,i)=><Nudge key={i} {...n} i={i}/>)}
             </div>
-
+ 
             <div className="ms-g-wide ms-card">
               <div className="ms-card-head">
                 <span className="ms-card-title">Goal progress</span>
@@ -205,7 +262,8 @@ export default function MoneySnapshot() {
           </div>
         </div>
       )}
-
+ 
+      {/* ══ SPENDING ══ */}
       {tab==="spending" && (
         <div className="ms-content ms-anim">
           <div className="ms-grid">
@@ -226,10 +284,10 @@ export default function MoneySnapshot() {
                 <div className="ms-donut-mid">
                   {sl!==null ? <>
                     <p style={{fontSize:14,fontWeight:700,color:spendData[sl].color}}>{fmt(spendData[sl].value)}</p>
-                    <p style={{fontSize:11,color:"#9e9892"}}>{spendData[sl].name}</p>
+                    <p style={{fontSize:11,color:"rgba(240,235,232,0.4)"}}>{spendData[sl].name}</p>
                   </> : <>
-                    <p style={{fontSize:14,fontWeight:700,color:"#1a1612"}}>R37 800</p>
-                    <p style={{fontSize:11,color:"#9e9892"}}>total spend</p>
+                    <p style={{fontSize:14,fontWeight:700,color:"#f0ebe8"}}>{fmt(spendTotal)}</p>
+                    <p style={{fontSize:11,color:"rgba(240,235,232,0.4)"}}>total spend</p>
                   </>}
                 </div>
               </div>
@@ -254,21 +312,22 @@ export default function MoneySnapshot() {
           </div>
         </div>
       )}
-
+ 
+      {/* ══ GOALS ══ */}
       {tab==="goals" && (
         <div className="ms-content ms-anim">
           <div className="ms-grid">
             <div className="ms-g-wide ms-card">
-              <div className="ms-card-head"><span className="ms-card-title">Financial goals — Property Builder</span></div>
+              <div className="ms-card-head"><span className="ms-card-title">Financial goals — {trackLabel}</span></div>
               <div style={{display:"flex",flexDirection:"column",gap:18,marginBottom:18}}>
                 {goals.map((g,i)=><GoalBar key={g.name} {...g} delay={i*150}/>)}
               </div>
-              <div className="ms-callout">On the <strong>Property Builder</strong> track — on track for a property purchase by <strong>Year 4</strong>.</div>
+              <div className="ms-callout">On the <strong>{trackLabel}</strong> track — stay consistent with monthly contributions to hit your milestones.</div>
             </div>
             {[
-              {label:"Emergency fund",  v:"75%",sub:"R18 000 of R24 000", note:"3 months to complete",  c:GRN},
-              {label:"Property deposit",v:"16%",sub:"R32 000 of R200 000",note:"On track for Year 4",   c:R},
-              {label:"Investments",     v:"20%",sub:"R20 000 of R100 000",note:"+R1 200 this month",    c:BLU},
+              {label:"Emergency fund",   v:`${pct(emergency,emergencyTarget)}%`, sub:`${fmt(emergency)} of ${fmt(emergencyTarget)}`, note:emergency>=emergencyTarget?"Complete! 🎉":"Keep contributing monthly", c:GRN},
+              {label:"Property deposit", v:`${pct(savings,depositTarget)}%`,     sub:`${fmt(savings)} of ${fmt(depositTarget)}`,     note:"On track for Year 4",   c:R},
+              {label:"Investments",      v:`${pct(invest*6,investTarget)}%`,     sub:`${fmt(invest*6)} of ${fmt(investTarget)}`,     note:`+${fmt(invest)} this month`, c:BLU},
             ].map(x=>(
               <div key={x.label} className="ms-g-third ms-card ms-summary-card" style={{borderTop:`3px solid ${x.c}`}}>
                 <p className="ms-summary-label">{x.label}</p>
@@ -280,7 +339,8 @@ export default function MoneySnapshot() {
           </div>
         </div>
       )}
-
+ 
+      {/* ══ ACTIVITY ══ */}
       {tab==="activity" && (
         <div className="ms-content ms-anim">
           <div className="ms-grid">
@@ -302,7 +362,7 @@ export default function MoneySnapshot() {
           </div>
         </div>
       )}
-
+ 
       <button className="ms-cta">Open Simulation Lab — Property vs Renting →</button>
     </main>
   );

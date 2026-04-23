@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import "../styles/sideBar.css";
 
 const navPages = [
@@ -14,6 +14,12 @@ export default function SideBar() {
   const name    = user.name    || "You";
   const initials= name.slice(0,2).toUpperCase();
   const track   = user.track ? user.track.replace(/^[^\s]+\s/,"") : "Property Builder";
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("nw_user");
+    navigate("/");
+  };
 
   return (
     <aside className="nw-sidebar">
@@ -63,9 +69,9 @@ export default function SideBar() {
           </div>
           <p className="nw-progress-sub">4 years remaining on your journey</p>
         </div>
-        <NavLink to="/" className="nw-logout">
+        <button onClick={handleLogout} className="nw-logout">
           <span>⏻</span> Log out
-        </NavLink>
+        </button>
       </div>
     </aside>
   );

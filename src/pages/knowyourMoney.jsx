@@ -39,13 +39,16 @@ function Slider({ label, min, max, step, value, onChange, formatVal }) {
   );
 }
  
+const getUser = () => JSON.parse(localStorage.getItem("nw_user") || "{}");
+ 
 /* ── Simulation 1: Property vs Renting ── */
 function PropertySim() {
-  const [salary,       setSalary]       = useState(48000);
+  const user = getUser();
+  const [salary,       setSalary]       = useState(Number(user.salary) || 48000);
   const [propPrice,    setPropPrice]    = useState(1500000);
-  const [deposit,      setDeposit]      = useState(150000);
+  const [deposit,      setDeposit]      = useState(Number(user.savings) || 150000);
   const [interest,     setInterest]     = useState(11.75);
-  const [rent,         setRent]         = useState(12000);
+  const [rent,         setRent]         = useState(Number(user.rent) || 12000);
   const [rentIncrease, setRentIncrease] = useState(8);
   const [investReturn, setInvestReturn] = useState(10);
   const [years,        setYears]        = useState(5);
@@ -133,8 +136,9 @@ function PropertySim() {
  
 /* ── Simulation 2: Car vs Invest ── */
 function CarSim() {
+  const user = getUser();
   const [carPrice,     setCarPrice]     = useState(450000);
-  const [repayment,    setRepayment]    = useState(8000);
+  const [repayment,    setRepayment]    = useState(Number(user.carFinance) || 8000);
   const [term,         setTerm]         = useState(60);
   const [investReturn, setInvestReturn] = useState(10);
   const [years,        setYears]        = useState(5);
@@ -216,8 +220,9 @@ function CarSim() {
  
 /* ── Simulation 3: Investment Growth ── */
 function InvestSim() {
-  const [monthly,      setMonthly]      = useState(4000);
-  const [lumpSum,      setLumpSum]      = useState(20000);
+  const user = getUser();
+  const [monthly,      setMonthly]      = useState(Number(user.investments) || 4000);
+  const [lumpSum,      setLumpSum]      = useState(Number(user.savings) || 20000);
   const [saAlloc,      setSaAlloc]      = useState(60);
   const [saReturn,     setSaReturn]     = useState(10);
   const [globalReturn, setGlobalReturn] = useState(13);
