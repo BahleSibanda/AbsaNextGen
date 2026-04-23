@@ -25,3 +25,14 @@ function AppLayout() {
     </div>
   );
 }
+
+// Option B — export at the bottom
+function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
+    </BrowserRouter>
+  );
+}
+
+export default App;
