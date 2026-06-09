@@ -49,9 +49,13 @@ function EduPanel({ title, children }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="sim-edu-panel">
-      <button className="sim-edu-toggle" onClick={() => setOpen(o => !o)}>
-        <span>📚 {title}</span>
-        <span className="sim-edu-chevron">{open ? "▲" : "▼"}</span>
+      <button
+        className="sim-edu-toggle"
+        data-open={open}
+        onClick={() => setOpen(o => !o)}
+      >
+        <span className="sim-edu-label-text">{title}</span>
+        <span className="sim-edu-chevron">▼</span>
       </button>
       {open && <div className="sim-edu-body">{children}</div>}
     </div>
@@ -199,11 +203,11 @@ function PropertySim() {
         </div>
 
         <EduPanel title="How this simulation works — assumptions and methodology">
-          <EduRow icon="🏦" label="Bond calculation" text="Uses a 20-year amortisation schedule. Monthly payment = (loan × rate × (1+rate)^n) / ((1+rate)^n - 1). Interest portion decreases monthly as principal is paid down." />
-          <EduRow icon="📋" label="Transfer duty" text="Based on 2024 SARS table. Properties under R1.1M are exempt (first-time buyer benefit). Above this, duty ranges from 3% to 13% of purchase price." />
-          <EduRow icon="🔧" label="Bond registration" text="Approximately 1.8% of loan value covers bond registration attorney fees, deeds office charges, and VAT. This cash is needed upfront — it cannot be included in the bond." />
-          <EduRow icon="📈" label="Property growth" text="SA residential property has averaged 6–8% annual capital appreciation over the long term, though this varies significantly by area. Cape Town Waterfront vs North West province are completely different markets." />
-          <EduRow icon="💡" label="The real comparison" text="When renting, the assumption is you invest the difference between bond repayment and rent (plus your deposit) in the market. This is the true opportunity cost of buying." />
+          <EduRow label="Bond calculation" text="Uses a 20-year amortisation schedule. Monthly payment = (loan × rate × (1+rate)^n) / ((1+rate)^n - 1). Interest portion decreases monthly as principal is paid down." />
+          <EduRow label="Transfer duty" text="Based on 2024 SARS table. Properties under R1.1M are exempt (first-time buyer benefit). Above this, duty ranges from 3% to 13% of purchase price." />
+          <EduRow label="Bond registration" text="Approximately 1.8% of loan value covers bond registration attorney fees, deeds office charges, and VAT. This cash is needed upfront — it cannot be included in the bond." />
+          <EduRow label="Property growth" text="SA residential property has averaged 6–8% annual capital appreciation over the long term, though this varies significantly by area. Cape Town Waterfront vs North West province are completely different markets." />
+          <EduRow label="The real comparison" text="When renting, the assumption is you invest the difference between bond repayment and rent (plus your deposit) in the market. This is the true opportunity cost of buying." />
         </EduPanel>
       </div>
     </div>
@@ -280,8 +284,8 @@ function CarSim() {
 
         <Verdict type={winner === "invest" ? "invest" : "tie"}>
           {winner === "invest"
-            ? `🏆 Investing the ${fmt(repayment)}/month instead builds ${fmt(oppCost)} more wealth over ${years} years than owning this vehicle (after depreciation).`
-            : `🚗 In this scenario the vehicle retains relatively more value — but remember to factor in insurance, fuel, and maintenance costs not modelled here.`}
+            ? `Investing the ${fmt(repayment)}/month instead builds ${fmt(oppCost)} more wealth over ${years} years than owning this vehicle (after depreciation).`
+            : ` In this scenario the vehicle retains relatively more value — but remember to factor in insurance, fuel, and maintenance costs not modelled here.`}
         </Verdict>
 
         <div className="sim-result-card" style={{ borderTop: `3px solid ${AMB}`, gridColumn: "span 2" }}>
@@ -316,10 +320,10 @@ function CarSim() {
         </div>
 
         <EduPanel title="Understanding vehicle financing in South Africa">
-          <EduRow icon="🚗" label="How SA vehicle finance works" text="Most dealerships offer 72-month finance (6 years). A balloon payment (typically 20–30% of vehicle value) is due at term end — this is NOT included in monthly repayments and requires cash or a new finance agreement." />
-          <EduRow icon="📉" label="Depreciation reality" text="New vehicles lose 15–20% of value in Year 1 alone. After 5 years, most vehicles are worth 35–50% of purchase price. Luxury brands often depreciate faster." />
-          <EduRow icon="💡" label="The 10/20 rule" text="Financial advisors suggest your total vehicle costs (repayment, insurance, fuel, maintenance) should not exceed 20% of take-home pay. In SA, the average exceeds this significantly." />
-          <EduRow icon="⚠️" label="Hidden costs not modelled" text="This simulation excludes insurance (R800–R3 000/month), fuel (R1 500–R4 000/month), and maintenance. These add 40–60% to your true vehicle cost." />
+          <EduRow  label="How SA vehicle finance works" text="Most dealerships offer 72-month finance (6 years). A balloon payment (typically 20–30% of vehicle value) is due at term end — this is NOT included in monthly repayments and requires cash or a new finance agreement." />
+          <EduRow  label="Depreciation reality" text="New vehicles lose 15–20% of value in Year 1 alone. After 5 years, most vehicles are worth 35–50% of purchase price. Luxury brands often depreciate faster." />
+          <EduRow  label="The 10/20 rule" text="Financial advisors suggest your total vehicle costs (repayment, insurance, fuel, maintenance) should not exceed 20% of take-home pay. In SA, the average exceeds this significantly." />
+          <EduRow  label="Hidden costs not modelled" text="This simulation excludes insurance (R800–R3 000/month), fuel (R1 500–R4 000/month), and maintenance. These add 40–60% to your true vehicle cost." />
         </EduPanel>
       </div>
     </div>
@@ -363,10 +367,10 @@ function InvestSim() {
 
   const verdictRating = growth / totalContributed;
   const verdictMsg = verdictRating > 0.5
-    ? `🚀 Exceptional — compound growth adds ${fmt(growth)} on top of your ${fmt(totalContributed)} contributed (${Math.round(verdictRating * 100)}% extra). Continue increasing monthly contributions as salary grows.`
+    ? ` Exceptional — compound growth adds ${fmt(growth)} on top of your ${fmt(totalContributed)} contributed (${Math.round(verdictRating * 100)}% extra). Continue increasing monthly contributions as salary grows.`
     : verdictRating > 0.2
-      ? `📈 Solid progress — ${fmt(growth)} in investment growth over ${years} years. Consider increasing monthly contributions by 1% of salary annually.`
-      : `⚠️ Limited compound growth at this horizon. Compound interest is most powerful beyond 10 years — stay consistent and extend your timeline.`;
+      ? `Solid progress — ${fmt(growth)} in investment growth over ${years} years. Consider increasing monthly contributions by 1% of salary annually.`
+      : ` Limited compound growth at this horizon. Compound interest is most powerful beyond 10 years — stay consistent and extend your timeline.`;
 
   return (
     <div className="sim-layout">
@@ -431,11 +435,11 @@ function InvestSim() {
         </div>
 
         <EduPanel title="How this simulation works — methodology and SA context">
-          <EduRow icon="📐" label="Compound interest formula" text="Each month: portfolio × (1 + monthly rate) + contribution. This is the standard future value of a growing annuity. The blended rate uses your SA/Global allocation to weight returns." />
-          <EduRow icon="🇿🇦" label="SA market returns" text="JSE All Share Index has returned ~10–11% annually over 30 years in nominal terms (6–7% real after inflation). Periods of underperformance (2015–2019) are common — diversification helps." />
-          <EduRow icon="🌍" label="Global market returns" text="S&P 500 has returned ~13% annually in rand terms over 20 years — boosted by USD appreciation. This can't be assumed to continue, but offshore allocation remains important for SA investors." />
-          <EduRow icon="💼" label="TFSA tax benefit" text="Inside a TFSA, dividends (normally 20% tax) and capital gains (normally 18% effective rate) are completely tax-free. Over 20 years at R36k/year, this can add R200k+ to your outcome." />
-          <EduRow icon="⚠️" label="Inflation note" text="All values are nominal (before inflation). Real returns = nominal - inflation (SA inflation ~5%). A portfolio showing R200k in 5 years is worth ~R157k in today's purchasing power." />
+          <EduRow label="Compound interest formula" text="Each month: portfolio × (1 + monthly rate) + contribution. This is the standard future value of a growing annuity. The blended rate uses your SA/Global allocation to weight returns." />
+          <EduRow label="SA market returns" text="JSE All Share Index has returned ~10–11% annually over 30 years in nominal terms (6–7% real after inflation). Periods of underperformance (2015–2019) are common — diversification helps." />
+          <EduRow label="Global market returns" text="S&P 500 has returned ~13% annually in rand terms over 20 years — boosted by USD appreciation. This can't be assumed to continue, but offshore allocation remains important for SA investors." />
+          <EduRow label="TFSA tax benefit" text="Inside a TFSA, dividends (normally 20% tax) and capital gains (normally 18% effective rate) are completely tax-free. Over 20 years at R36k/year, this can add R200k+ to your outcome." />
+          <EduRow label="Inflation note" text="All values are nominal (before inflation). Real returns = nominal - inflation (SA inflation ~5%). A portfolio showing R200k in 5 years is worth ~R157k in today's purchasing power." />
         </EduPanel>
       </div>
     </div>
@@ -535,10 +539,10 @@ function TfsaSim() {
 
         <Verdict type="invest">
           {taxSaving > 50000
-            ? `🎉 Excellent — your TFSA saves you ${fmt(taxSaving)} in tax compared to a standard account over ${years} years. Start as early as possible; every year earlier multiplies the benefit.`
+            ? ` Excellent — your TFSA saves you ${fmt(taxSaving)} in tax compared to a standard account over ${years} years. Start as early as possible; every year earlier multiplies the benefit.`
             : taxSaving > 10000
-              ? `📈 Solid tax benefit of ${fmt(taxSaving)} over ${years} years. Maximise your annual R36k contribution to compound this benefit further.`
-              : `💡 Smaller benefit at this horizon. The TFSA is most powerful over 15+ years — commit to keeping contributions in for the long term.`}
+              ? ` Solid tax benefit of ${fmt(taxSaving)} over ${years} years. Maximise your annual R36k contribution to compound this benefit further.`
+              : ` Smaller benefit at this horizon. The TFSA is most powerful over 15+ years — commit to keeping contributions in for the long term.`}
         </Verdict>
 
         <div className="sim-chart-card">

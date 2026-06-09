@@ -126,6 +126,7 @@
   background: rgba(8,3,6,0.60);
   border-radius: 16px; padding: 20px;
   border: 0.5px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(16px);
   position: sticky; top: 20px;
 }
 .sim-inputs-title { font-size: 11px; font-weight: 500; color: rgba(240,235,232,0.3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
@@ -153,6 +154,7 @@
   background: rgba(8,3,6,0.60);
   border-radius: 12px; padding: 16px;
   border: 0.5px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(12px);
   position: relative; overflow: hidden;
 }
 .sim-result-card::before {
@@ -173,6 +175,7 @@
   background: rgba(8,3,6,0.60);
   border-radius: 14px; padding: 18px 20px;
   border: 0.5px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(16px);
   position: relative; overflow: hidden;
 }
 .sim-chart-card::before {
@@ -182,14 +185,224 @@
 }
 .sim-chart-title { font-size: 11px; font-weight: 500; color: rgba(240,235,232,0.3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; }
 
-.sim-tip { background: rgba(5,2,4,0.96); border-radius: 8px; padding: 10px 14px; min-width: 160px; border: 0.5px solid rgba(255,255,255,0.1); }
+/* ── Issue 1: Dark tooltip — kill Recharts white default ── */
+.sim-tip {
+  background: rgba(5,2,4,0.97) !important;
+  border-radius: 10px;
+  padding: 10px 14px;
+  min-width: 140px;
+  border: 0.5px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+/* Recharts injects its own wrapper — force that dark too */
+.recharts-tooltip-wrapper { outline: none !important; }
+.recharts-default-tooltip {
+  background: rgba(5,2,4,0.97) !important;
+  border: 0.5px solid rgba(255,255,255,0.12) !important;
+  border-radius: 10px !important;
+  color: #f0ebe8 !important;
+}
+.recharts-tooltip-label { color: rgba(240,235,232,0.45) !important; font-size: 11px !important; }
+.recharts-tooltip-item  { color: #f0ebe8 !important; font-size: 12px !important; }
+
 .sim-tip-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
 .sim-tip-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #fff; margin-bottom: 3px; }
 .sim-tip-row:last-child { margin-bottom: 0; }
 .sim-tip-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
+/* ── Issue 2: Studio picker — clamp desc text so cards stay uniform height ── */
+.sim-pick-desc {
+  font-size: 10.5px;
+  color: rgba(240,235,232,0.42);
+  line-height: 1.45;
+  /* Clamp to 3 lines — prevents overflow on cards with longer descriptions */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* Ensure title never wraps to 3 lines and push desc down */
+.sim-pick-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f0ebe8;
+  line-height: 1.25;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Issue 3: Education panel — clean design, no emoji box artifacts ── */
+.sim-edu-panel {
+  background: rgba(255,255,255,0.03);
+  border: 0.5px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.sim-edu-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(240,235,232,0.5);
+  transition: background 0.15s, color 0.15s;
+  text-align: left;
+  gap: 10px;
+}
+.sim-edu-toggle:hover {
+  background: rgba(255,255,255,0.04);
+  color: rgba(240,235,232,0.8);
+}
+/* Left accent bar instead of emoji */
+.sim-edu-toggle::before {
+  content: '';
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: #C8102E;
+  flex-shrink: 0;
+}
+.sim-edu-label-text { flex: 1; }
+.sim-edu-chevron {
+  font-size: 10px;
+  color: rgba(240,235,232,0.3);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.sim-edu-toggle[data-open="true"] .sim-edu-chevron { transform: rotate(180deg); }
+.sim-edu-body {
+  padding: 0 16px 16px;
+  border-top: 0.5px solid rgba(255,255,255,0.06);
+  animation: simFade 0.2s ease;
+}
+.sim-edu-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 11px 0;
+  border-bottom: 0.5px solid rgba(255,255,255,0.05);
+}
+.sim-edu-row:last-child { border-bottom: none; }
+.sim-edu-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  width: 22px;
+  text-align: center;
+}
+.sim-edu-label { font-size: 12px; font-weight: 600; color: #f0ebe8; margin-bottom: 3px; }
+.sim-edu-text  { font-size: 12px; color: rgba(240,235,232,0.5); line-height: 1.6; }
+
+/* ── Issue 4: Upfront cost box (missing styles from JSX) ── */
+.sim-upfront-box {
+  background: rgba(255,255,255,0.04);
+  border: 0.5px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 12px;
+  font-size: 12px;
+}
+.sim-upfront-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(240,235,232,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.sim-upfront-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  color: rgba(240,235,232,0.5);
+  border-bottom: 0.5px solid rgba(255,255,255,0.05);
+}
+.sim-upfront-row strong { color: #f0ebe8; }
+.sim-upfront-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0 0;
+  font-weight: 600;
+  font-size: 13px;
+  color: rgba(240,235,232,0.7);
+}
+.sim-upfront-total strong { font-family: 'Syne', sans-serif; font-size: 15px; }
+
+/* ── Verdict warn variant (missing) ── */
+.sim-verdict-warn { background: rgba(239,159,39,0.12); color: #fcd34d; border: 0.5px solid rgba(239,159,39,0.25); }
+
+/* ── Toggle button (TFSA studio) ── */
+.sim-toggle-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 12px;
+  color: rgba(240,235,232,0.5);
+  margin-bottom: 4px;
+}
+.sim-toggle-btn {
+  background: rgba(255,255,255,0.06);
+  border: 0.5px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  color: rgba(240,235,232,0.5);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.sim-toggle-btn.on {
+  background: rgba(29,158,117,0.15);
+  border-color: rgba(29,158,117,0.3);
+  color: #4ade80;
+}
+
+/* ── Warning box (TFSA over-limit alert) ── */
+.sim-warn-box {
+  background: rgba(239,159,39,0.10);
+  border: 0.5px solid rgba(239,159,39,0.25);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #fcd34d;
+  line-height: 1.5;
+  margin: 8px 0;
+}
+
+/* ── sim-body wrapper ── */
+.sim-body { }
+
 .sim-fade { animation: simFade .25s ease; }
 @keyframes simFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
 @media (max-width: 1100px) { .sim-picker { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-@media (max-width: 900px) { .sim-layout { grid-template-columns: 1fr; } .sim-picker { grid-template-columns: repeat(2, minmax(0,1fr)); } .sim-result-row.three { grid-template-columns: 1fr 1fr; } .sim-main { padding: 20px 16px; } .sim-pick-card { height: 96px; } .sim-pick-body { padding-left: 40%; } }
-@media (max-width: 560px) { .sim-picker { grid-template-columns: 1fr; } .sim-pick-card { height: 88px; } .sim-pick-img { width: 42%; } .sim-pick-body { padding-left: 38%; } }
+@media (max-width: 900px) {
+  .sim-layout { grid-template-columns: 1fr; }
+  .sim-picker { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .sim-result-row.three { grid-template-columns: 1fr 1fr; }
+  .sim-main { padding: 20px 16px; }
+  .sim-pick-card { height: 96px; }
+  .sim-pick-body { padding-left: 40%; }
+}
+@media (max-width: 560px) {
+  .sim-picker { grid-template-columns: 1fr; }
+  .sim-pick-card { height: 88px; }
+  .sim-pick-img { width: 42%; }
+  .sim-pick-body { padding-left: 38%; }
+}

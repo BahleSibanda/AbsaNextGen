@@ -320,7 +320,7 @@ export default function MoneySnapshot() {
           { id: "tax",       label: "Tax & Pay" },
           { id: "goals",     label: "Goals" },
           { id: "activity",  label: "Activity" },
-          { id: "edit",      label: "✏️ Edit" },
+          { id: "edit",      label: " Edit" },
         ].map(t => (
           <button key={t.id} className={`ms-tab ${tab === t.id ? "ms-tab-on" : ""}`} onClick={() => setTab(t.id)}>
             {t.label}
@@ -501,9 +501,9 @@ export default function MoneySnapshot() {
               <div className="ms-card-head"><span className="ms-card-title">Tax saving opportunities</span></div>
               <div className="ms-tax-tips">
                 {[
-                  { icon: "📋", title: "Retirement Annuity (RA)", body: `You can deduct up to 27.5% of your taxable income (max R350k/year) in RA contributions. At your income, contributing R${Math.round(salary * 0.1 * 12).toLocaleString("en-ZA")}/year could save you R${Math.round(salary * 0.1 * 12 * (metrics.marginalRate / 100)).toLocaleString("en-ZA")} in annual tax.` },
-                  { icon: "💼", title: "Tax-Free Savings Account (TFSA)", body: "Invest up to R36 000/year (R500k lifetime) with zero tax on returns, dividends, or capital gains. Ideal for your medium-term goals." },
-                  { icon: "🏥", title: "Medical Aid Credits", body: "If you contribute to medical aid, you receive a monthly tax credit. Primary member: R364/month. First dependant: R364. Additional: R246 each." },
+                  { title: "Retirement Annuity (RA)", body: `You can deduct up to 27.5% of your taxable income (max R350k/year) in RA contributions. At your income, contributing R${Math.round(salary * 0.1 * 12).toLocaleString("en-ZA")}/year could save you R${Math.round(salary * 0.1 * 12 * (metrics.marginalRate / 100)).toLocaleString("en-ZA")} in annual tax.` },
+                  { title: "Tax-Free Savings Account (TFSA)", body: "Invest up to R36 000/year (R500k lifetime) with zero tax on returns, dividends, or capital gains. Ideal for your medium-term goals." },
+                  { title: "Medical Aid Credits", body: "If you contribute to medical aid, you receive a monthly tax credit. Primary member: R364/month. First dependant: R364. Additional: R246 each." },
                 ].map((tip, i) => (
                   <div key={i} className="ms-tax-tip">
                     <span className="ms-tax-tip-icon">{tip.icon}</span>
@@ -538,7 +538,7 @@ export default function MoneySnapshot() {
                 v: `${pct(emergency, emergencyTarget)}%`,
                 sub: `${fmt(emergency)} of ${fmt(emergencyTarget)}`,
                 note: emergency >= emergencyTarget
-                  ? "Complete! 🎉 3 months covered"
+                  ? "Complete! 3 months covered"
                   : `${metrics.emergencyMonths} months covered — target 3`,
                 c: GRN,
               },

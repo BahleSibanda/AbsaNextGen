@@ -64,7 +64,6 @@ function buildTracks(user) {
   return [
     {
       id: "property",
-      icon: "🏠",
       name: "Property Builder",
       tagline: "Own your first home within 5 years",
       color: R,
@@ -156,7 +155,6 @@ function buildTracks(user) {
     },
     {
       id: "balanced",
-      icon: "⚖️",
       name: "Balanced Lifestyle",
       tagline: "Invest consistently, live well today",
       color: GRN,
@@ -241,7 +239,6 @@ function buildTracks(user) {
     },
     {
       id: "global",
-      icon: "🌍",
       name: "Global Investor",
       tagline: "Build wealth across international markets",
       color: BLU,
@@ -558,7 +555,7 @@ export default function StrategyTracks() {
     else {
       current.add(id);
       if (current.size === track.milestones.length && !wasComplete) {
-        show(`🎉 All ${track.name} milestones complete!`, "success");
+        show(` All ${track.name} milestones complete!`, "success");
       }
     }
     const updated = { ...milestoneStates, [track.id]: current };
@@ -701,7 +698,7 @@ export default function StrategyTracks() {
                     <p className="st-example-body">{track.example.strategy}</p>
                   </div>
                   <div className="st-card" style={{ marginTop: 14, padding: 14 }}>
-                    <p className="st-card-label">⚠️ Know before you commit</p>
+                    <p className="st-card-label"> Know before you commit</p>
                     {track.warnings.map((w, i) => (
                       <div key={i} className="st-warning-row">
                         <span className="st-warning-dot" />
@@ -809,7 +806,7 @@ export default function StrategyTracks() {
                 <Tradeoffs items={track.tradeoffs} />
               </div>
               <div className="st-card" style={{ marginTop: 14 }}>
-                <p className="st-card-label">⚠️ Important warnings</p>
+                <p className="st-card-label">Important warnings</p>
                 {track.warnings.map((w, i) => (
                   <div key={i} className="st-warning-row">
                     <span className="st-warning-dot" />
@@ -829,12 +826,12 @@ export default function StrategyTracks() {
               </div>
               <div className="st-tips-grid" style={{ marginTop: 14 }}>
                 {[
-                  { icon: "🔄", tip: "Automate your savings on salary day so you never have the chance to spend it first." },
-                  { icon: "📅", tip: "Review your budget monthly — small adjustments early prevent big problems later." },
-                  { icon: "💼", tip: "A TFSA lets you invest R36 000/year tax-free. Max it before anything else." },
-                  { icon: "📊", tip: "ETFs are the lowest-cost way to invest — typical total expense ratio under 0.5%." },
-                  { icon: "🛡️", tip: "Your emergency fund should cover 3–6 months of expenses before investing aggressively." },
-                  { icon: "💳", tip: "Keeping credit utilisation below 30% significantly improves your credit score for bond approval." },
+                  { tip: "Automate your savings on salary day so you never have the chance to spend it first." },
+                  { tip: "Review your budget monthly — small adjustments early prevent big problems later." },
+                  { tip: "A TFSA lets you invest R36 000/year tax-free. Max it before anything else." },
+                  { tip: "ETFs are the lowest-cost way to invest — typical total expense ratio under 0.5%." },
+                  { tip: "Your emergency fund should cover 3–6 months of expenses before investing aggressively." },
+                  { tip: "Keeping credit utilisation below 30% significantly improves your credit score for bond approval." },
                 ].map((t, i) => (
                   <div key={i} className="st-tip-card" style={{ animationDelay: `${i * 0.08}s` }}>
                     <span className="st-tip-icon">{t.icon}</span>

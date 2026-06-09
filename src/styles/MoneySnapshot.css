@@ -154,6 +154,7 @@
   transform: translateY(12px);
   animation: cardUp 0.45s ease forwards;
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
+  backdrop-filter: blur(12px);
   position: relative;
   overflow: hidden;
   cursor: default;
@@ -254,6 +255,7 @@
   border: 0.5px solid rgba(255,255,255,0.13);
   border-radius: 20px;
   padding: 22px;
+  backdrop-filter: blur(20px);
   position: relative;
   overflow: hidden;
   transition: border-color 0.2s, background 0.2s;
@@ -436,13 +438,20 @@
 .ms-act-date { font-size: 11px; color: var(--muted); }
 .ms-act-amt  { font-size: 14px; font-weight: 600; font-family: 'Syne', sans-serif; }
 
-/* tooltip */
-.ms-tip {
-  background: rgba(10,5,8,0.96);
-  border: 0.5px solid rgba(255,255,255,0.12);
-  border-radius: 12px;
-  padding: 10px 14px;
+/* ── Recharts overrides — kill white tooltip and cursor flash ── */
+.recharts-tooltip-wrapper { outline: none !important; }
+.recharts-default-tooltip {
+  background: rgba(5,2,4,0.97) !important;
+  border: 0.5px solid rgba(255,255,255,0.12) !important;
+  border-radius: 10px !important;
+  color: #f0ebe8 !important;
 }
+.recharts-tooltip-label  { color: rgba(240,235,232,0.45) !important; font-size: 11px !important; }
+.recharts-tooltip-item   { color: #f0ebe8 !important; font-size: 12px !important; }
+.recharts-rectangle.recharts-tooltip-cursor { fill: rgba(255,255,255,0.04) !important; }
+
+/* ── tooltip */
+.ms-tip { background: rgba(10,5,8,0.97); border: 0.5px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 10px 14px; backdrop-filter: blur(20px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
 .ms-tip-l { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
 .ms-tip-v { font-size: 15px; font-weight: 600; font-family: 'Syne', sans-serif; color: var(--text); }
 
