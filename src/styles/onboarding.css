@@ -8,7 +8,6 @@
   overflow: hidden;
   box-shadow: var(--shadow-lg);
   background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(12px);
 }
 
 .ob-left {

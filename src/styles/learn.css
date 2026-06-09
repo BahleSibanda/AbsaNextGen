@@ -51,7 +51,6 @@
   border-radius: 14px; padding: 20px;
   border: 0.5px solid rgba(255,255,255,0.10);
   cursor: pointer;
-  backdrop-filter: blur(16px);
   transition: transform .2s, box-shadow .2s, border-color .2s;
   position: relative; overflow: hidden;
 }

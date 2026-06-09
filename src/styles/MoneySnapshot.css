@@ -154,7 +154,6 @@
   transform: translateY(12px);
   animation: cardUp 0.45s ease forwards;
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
-  backdrop-filter: blur(12px);
   position: relative;
   overflow: hidden;
   cursor: default;
@@ -255,7 +254,6 @@
   border: 0.5px solid rgba(255,255,255,0.13);
   border-radius: 20px;
   padding: 22px;
-  backdrop-filter: blur(20px);
   position: relative;
   overflow: hidden;
   transition: border-color 0.2s, background 0.2s;
@@ -444,7 +442,6 @@
   border: 0.5px solid rgba(255,255,255,0.12);
   border-radius: 12px;
   padding: 10px 14px;
-  backdrop-filter: blur(20px);
 }
 .ms-tip-l { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
 .ms-tip-v { font-size: 15px; font-weight: 600; font-family: 'Syne', sans-serif; color: var(--text); }

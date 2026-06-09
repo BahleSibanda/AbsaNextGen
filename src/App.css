@@ -1,31 +1,51 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Dark baseline on every ancestor — prevents white/beige flash
+   between route transitions. Must match --bg in designSystem.css */
+html,
 body {
   margin: 0;
-  background: #f0eeeb;
+  background: #1c1014;
   font-family: 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
-  color: #1a1612;
+  color: #f0ebe8;
+  min-height: 100vh;
 }
 
-#root { min-height: 100vh; }
+/* Belt-and-braces: covers the single frame before React paints */
+#root {
+  min-height: 100vh;
+  background: #1c1014;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
 
-.app-container { display: flex; min-height: 100vh; }
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: #1c1014;
+}
 
+/* main-content must be dark so the background never shows through
+   between the old page unmounting and the new page mounting */
 .main-content {
   flex: 1;
   overflow-y: auto;
   min-height: 100vh;
-  background: #f0eeeb;
+  background: #1c1014;
+  position: relative;
 }
 
+/* Scrollbar */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #C8102E; }
 
+/* Toast animation */
 @keyframes toastIn {
   from { transform: translateY(12px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
- 

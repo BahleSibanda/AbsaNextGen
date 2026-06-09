@@ -33,7 +33,6 @@
   border-radius: 16px; padding: 22px;
   border: 0.5px solid rgba(255,255,255,0.10);
   cursor: pointer;
-  backdrop-filter: blur(16px);
   transition: transform .2s, box-shadow .2s, border-color .2s;
   position: relative; overflow: hidden;
 }
@@ -60,7 +59,6 @@
   background: rgba(8,3,6,0.60);
   border-radius: 16px; padding: 24px;
   border: 0.5px solid rgba(255,255,255,0.10);
-  backdrop-filter: blur(16px);
   position: relative; overflow: hidden;
 }
 .st-detail::before {

@@ -122,7 +122,6 @@ body {
   border-radius: var(--r-lg);
   border: 0.5px solid var(--border);
   padding: 20px;
-  backdrop-filter: blur(16px);
   transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
   position: relative;
   overflow: hidden;
@@ -189,7 +188,7 @@ body {
   background: var(--surface);
   color: var(--text-primary);
   border: 0.5px solid var(--border-strong);
-  backdrop-filter: blur(10px);
+  filter: blur(10px);
 }
 .btn-secondary:hover { background: var(--surface-2); transform: translateY(-1px); }
 .btn-ghost {

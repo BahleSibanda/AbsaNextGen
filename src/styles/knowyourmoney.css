@@ -24,26 +24,101 @@
 .sim-title span { color: #C8102E; }
 .sim-subline { font-size: 13px; color: rgba(240,235,232,0.4); }
 
-.sim-picker { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 20px; }
+/* ── Studio picker cards — image fade design ── */
+.sim-picker {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
 .sim-pick-card {
-  background: rgba(8,3,6,0.60);
-  border-radius: 14px; padding: 18px;
+  position: relative;
+  border-radius: 14px;
   border: 1.5px solid rgba(255,255,255,0.08);
   cursor: pointer;
-  backdrop-filter: blur(16px);
-  display: flex; align-items: flex-start; gap: 14px;
-  transition: all .2s; position: relative; overflow: hidden;
+  overflow: hidden;
+  height: 110px;
+  background: rgb(8,3,6);
+  transition: transform .2s, box-shadow .2s, border-color .2s;
 }
-.sim-pick-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+.sim-pick-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.5);
+  border-color: rgba(255,255,255,0.18);
 }
-.sim-pick-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.15); }
-.sim-pick-card.active { border-color: #C8102E; background: rgba(200,16,46,0.10); box-shadow: 0 0 0 2px rgba(200,16,46,0.15); }
-.sim-pick-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
-.sim-pick-title { font-size: 14px; font-weight: 500; color: #f0ebe8; margin-bottom: 4px; }
-.sim-pick-desc { font-size: 12px; color: rgba(240,235,232,0.4); line-height: 1.5; }
+.sim-pick-card.active {
+  border-color: var(--card-accent);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--card-accent) 25%, transparent),
+    0 8px 28px rgba(0,0,0,0.4);
+}
+
+/* Photo layer — left 55% of card */
+.sim-pick-img {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 58%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Fade layer — photo bleeds into dark bg from ~30% onwards */
+.sim-pick-fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    transparent      0%,
+    transparent      25%,
+    rgba(8,3,6,0.55) 42%,
+    rgba(8,3,6,0.88) 58%,
+    rgba(8,3,6,0.98) 72%,
+    rgb(8,3,6)       85%
+  );
+}
+
+/* Text — right side, above image + fade */
+.sim-pick-body {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 14px 16px 14px 43%;
+}
+
+.sim-pick-label {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  margin-bottom: 5px;
+  opacity: 0.85;
+}
+.sim-pick-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f0ebe8;
+  line-height: 1.25;
+  margin-bottom: 5px;
+}
+.sim-pick-desc {
+  font-size: 10.5px;
+  color: rgba(240,235,232,0.42);
+  line-height: 1.45;
+}
+.sim-pick-active-dot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 8px;
+}
 
 .sim-layout { display: grid; grid-template-columns: 320px 1fr; gap: 16px; align-items: start; }
 
@@ -51,7 +126,6 @@
   background: rgba(8,3,6,0.60);
   border-radius: 16px; padding: 20px;
   border: 0.5px solid rgba(255,255,255,0.10);
-  backdrop-filter: blur(16px);
   position: sticky; top: 20px;
 }
 .sim-inputs-title { font-size: 11px; font-weight: 500; color: rgba(240,235,232,0.3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
@@ -79,7 +153,6 @@
   background: rgba(8,3,6,0.60);
   border-radius: 12px; padding: 16px;
   border: 0.5px solid rgba(255,255,255,0.10);
-  backdrop-filter: blur(12px);
   position: relative; overflow: hidden;
 }
 .sim-result-card::before {
@@ -100,7 +173,6 @@
   background: rgba(8,3,6,0.60);
   border-radius: 14px; padding: 18px 20px;
   border: 0.5px solid rgba(255,255,255,0.10);
-  backdrop-filter: blur(16px);
   position: relative; overflow: hidden;
 }
 .sim-chart-card::before {
@@ -110,7 +182,7 @@
 }
 .sim-chart-title { font-size: 11px; font-weight: 500; color: rgba(240,235,232,0.3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; }
 
-.sim-tip { background: rgba(5,2,4,0.96); border-radius: 8px; padding: 10px 14px; min-width: 160px; border: 0.5px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); }
+.sim-tip { background: rgba(5,2,4,0.96); border-radius: 8px; padding: 10px 14px; min-width: 160px; border: 0.5px solid rgba(255,255,255,0.1); }
 .sim-tip-label { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
 .sim-tip-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #fff; margin-bottom: 3px; }
 .sim-tip-row:last-child { margin-bottom: 0; }
@@ -118,4 +190,6 @@
 
 .sim-fade { animation: simFade .25s ease; }
 @keyframes simFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-@media (max-width: 900px) { .sim-layout { grid-template-columns: 1fr; } .sim-picker { grid-template-columns: 1fr; } .sim-result-row.three { grid-template-columns: 1fr 1fr; } .sim-main { padding: 20px 16px; } }
+@media (max-width: 1100px) { .sim-picker { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (max-width: 900px) { .sim-layout { grid-template-columns: 1fr; } .sim-picker { grid-template-columns: repeat(2, minmax(0,1fr)); } .sim-result-row.three { grid-template-columns: 1fr 1fr; } .sim-main { padding: 20px 16px; } .sim-pick-card { height: 96px; } .sim-pick-body { padding-left: 40%; } }
+@media (max-width: 560px) { .sim-picker { grid-template-columns: 1fr; } .sim-pick-card { height: 88px; } .sim-pick-img { width: 42%; } .sim-pick-body { padding-left: 38%; } }
