@@ -507,3 +507,44 @@
   .ms-stats { grid-template-columns: 1fr 1fr; }
   .ms-tabs { flex-wrap: wrap; }
 }
+/* ── Goal bar additions ── */
+.ms-goal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2px;
+}
+.ms-goal-eta {
+  font-size: 11px;
+  color: rgba(245,240,238,0.35);
+  font-style: italic;
+}
+.ms-goal-complete {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Goal icon — SVG wrapped in a coloured circle */
+.ms-goal-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  flex-shrink: 0;
+  border: 0.5px solid rgba(255,255,255,0.1);
+}
+
+/* Tax tip icon — coloured rounded square replaces emoji */
+.ms-tax-tip-icon-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}

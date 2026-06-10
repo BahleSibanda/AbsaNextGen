@@ -7,20 +7,101 @@ import {
 import { calcMetrics, calcSpendBuckets, generateNarratives, getIncomeBand } from "../utils/saTax";
 import "../styles/moneySnapshot.css";
 
-// ── Colour palette ────────────────────────────────────────────────────────────
 const R   = "#C8102E";
 const GRN = "#1D9E75";
 const BLU = "#2563EB";
 const AMB = "#EF9F27";
-const PUR = "#7C3AED";
 
-const getUser  = () => JSON.parse(localStorage.getItem("nw_user") || "{}");
-const saveUser = (d) => localStorage.setItem("nw_user", JSON.stringify(d));
+function storageGet(key, fallback = {}) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+  catch { return fallback; }
+}
+function storageSet(key, val) {
+  try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+}
+
+const getUser  = () => storageGet("nw_user", {});
+const saveUser = (d) => storageSet("nw_user", d);
 const fmt  = (n) => `R${Math.round(n).toLocaleString("en-ZA")}`;
 const pct  = (c, t) => t > 0 ? Math.min(100, Math.round((c / t) * 100)) : 0;
 
-// ── Sub-components ────────────────────────────────────────────────────────────
-function CountUp({ end, pre = "R", suf = "", dur = 1000 }) {
+// ── Pure SVG icon set — no emojis ────────────────────────────────────────────
+const Icon = {
+  Shield: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+  ),
+  Home: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+  ),
+  TrendingUp: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+      <polyline points="17 6 23 6 23 12"/>
+    </svg>
+  ),
+  Car: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="1" y="3" width="15" height="13" rx="2"/>
+      <path d="M16 8h4l3 3v5h-7V8z"/>
+      <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+    </svg>
+  ),
+  FileText: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+  ),
+  Briefcase: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="7" width="20" height="14" rx="2"/>
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+    </svg>
+  ),
+  Heart: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+  ),
+  Edit: () => (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+  ),
+  Globe: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="2" y1="12" x2="22" y2="12"/>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>
+  ),
+};
+
+// ── Goal icon map by track ───────────────────────────────────────────────────
+function GoalIcon({ trackLabel, goalKey, color }) {
+  const icons = {
+    emergency: <Icon.Shield />,
+    deposit:   <Icon.Home />,
+    invest:    <Icon.TrendingUp />,
+    global:    <Icon.Globe />,
+  };
+  return (
+    <span className="ms-goal-icon-wrap" style={{ color }}>
+      {icons[goalKey] || <Icon.TrendingUp />}
+    </span>
+  );
+}
+
+// ── CountUp animation ────────────────────────────────────────────────────────
+function CountUp({ end, pre = "R", suf = "", dur = 800 }) {
   const [v, setV] = useState(0);
   const raf = useRef(); const t0 = useRef();
   useEffect(() => {
@@ -37,25 +118,45 @@ function CountUp({ end, pre = "R", suf = "", dur = 1000 }) {
   return <>{pre}{v.toLocaleString("en-ZA")}{suf}</>;
 }
 
-function GoalBar({ name, current, target, color, icon, delay = 0 }) {
+// ── GoalBar — fully driven by real user data ─────────────────────────────────
+function GoalBar({ name, goalKey, current, target, color, monthlyRate, timeToGoal, delay = 0 }) {
   const [w, setW] = useState(0);
   const p = pct(current, target);
-  useEffect(() => { const t = setTimeout(() => setW(p), delay + 300); return () => clearTimeout(t); }, [p, delay]);
+  const remaining = Math.max(0, target - current);
+  useEffect(() => {
+    const t = setTimeout(() => setW(p), delay + 200);
+    return () => clearTimeout(t);
+  }, [p, delay]);
+
   return (
     <div className="ms-goal">
       <div className="ms-goal-row">
-        <span className="ms-goal-icon">{icon}</span>
+        <GoalIcon goalKey={goalKey} color={color} />
         <span className="ms-goal-name">{name}</span>
         <span className="ms-goal-pct" style={{ color }}>{p}%</span>
       </div>
       <div className="ms-goal-track">
-        <div className="ms-goal-fill" style={{ width: `${w}%`, background: color, transition: `width 0.9s cubic-bezier(.4,0,.2,1) ${delay}ms` }} />
+        <div className="ms-goal-fill" style={{
+          width: `${w}%`, background: color,
+          transition: `width 0.9s cubic-bezier(.4,0,.2,1) ${delay}ms`
+        }} />
       </div>
-      <span className="ms-goal-amounts">{fmt(current)} <em>of {fmt(target)}</em></span>
+      <div className="ms-goal-footer">
+        <span className="ms-goal-amounts">{fmt(current)} <em>of {fmt(target)}</em></span>
+        {p < 100 && remaining > 0 && monthlyRate > 0 && (
+          <span className="ms-goal-eta">
+            {timeToGoal ? `~${timeToGoal} to go` : `${fmt(remaining)} remaining`}
+          </span>
+        )}
+        {p >= 100 && (
+          <span className="ms-goal-complete" style={{ color: GRN }}>Target met</span>
+        )}
+      </div>
     </div>
   );
 }
 
+// ── Nudge ────────────────────────────────────────────────────────────────────
 function Nudge({ type, dot, text, i }) {
   const [gone, setGone] = useState(false);
   if (gone) return null;
@@ -75,12 +176,10 @@ const ChartTip = ({ active, payload, label }) => active && payload?.length ? (
   </div>
 ) : null;
 
-// Inline edit field for snapshot page
+// ── Inline edit field ─────────────────────────────────────────────────────────
 function EditField({ label, field, value, type = "number", onChange }) {
   const [editing, setEditing] = useState(false);
-  const [local, setLocal] = useState(value);
-  const ref = useRef();
-
+  const [local, setLocal]     = useState(value);
   useEffect(() => { setLocal(value); }, [value]);
 
   const commit = () => {
@@ -93,14 +192,9 @@ function EditField({ label, field, value, type = "number", onChange }) {
       <div className="ms-edit-field editing">
         <span className="ms-edit-label">{label}</span>
         <div className="ms-edit-row">
-          <input
-            ref={ref}
-            type={type}
-            value={local}
-            autoFocus
+          <input type={type} value={local} autoFocus className="ms-edit-input"
             onChange={e => setLocal(e.target.value)}
             onKeyDown={e => { if (e.key === "Enter") commit(); if (e.key === "Escape") setEditing(false); }}
-            className="ms-edit-input"
           />
           <button className="ms-edit-save" onClick={commit}>✓</button>
           <button className="ms-edit-cancel" onClick={() => setEditing(false)}>✕</button>
@@ -112,20 +206,20 @@ function EditField({ label, field, value, type = "number", onChange }) {
     <div className="ms-edit-field" onClick={() => setEditing(true)}>
       <span className="ms-edit-label">{label}</span>
       <div className="ms-edit-row">
-        <span className="ms-edit-val">{type === "number" ? fmt(Number(value) || 0) : value}</span>
-        <span className="ms-edit-icon">✏️</span>
+        <span className="ms-edit-val">{type === "number" ? fmt(Number(value) || 0) : value || "—"}</span>
+        <span className="ms-edit-icon"><Icon.Edit /></span>
       </div>
     </div>
   );
 }
 
-// Tax breakdown component
+// ── Tax breakdown ─────────────────────────────────────────────────────────────
 function TaxBreakdown({ metrics }) {
   const rows = [
-    { label: "Gross salary",        val: fmt(metrics.gross),       color: GRN,  note: "Before deductions" },
-    { label: "PAYE (income tax)",   val: `-${fmt(metrics.monthlyPAYE)}`, color: R, note: `${metrics.effectiveRate}% effective / ${metrics.marginalRate}% marginal` },
-    { label: "UIF",                 val: `-${fmt(metrics.uif)}`,   color: AMB,  note: "1% capped at R17 712/month" },
-    { label: "Net take-home",       val: fmt(metrics.netSalary),   color: GRN,  note: metrics.taxBracket },
+    { label: "Gross salary",      val: fmt(metrics.gross),            color: GRN, note: "Before deductions" },
+    { label: "PAYE (income tax)", val: `-${fmt(metrics.monthlyPAYE)}`,color: R,   note: `${metrics.effectiveRate}% effective / ${metrics.marginalRate}% marginal` },
+    { label: "UIF",               val: `-${fmt(metrics.uif)}`,        color: AMB, note: "1% capped at R17 712/month" },
+    { label: "Net take-home",     val: fmt(metrics.netSalary),        color: GRN, note: metrics.taxBracket },
   ];
   return (
     <div className="ms-tax-breakdown">
@@ -142,62 +236,160 @@ function TaxBreakdown({ metrics }) {
   );
 }
 
+// ── Tax tip icon — pure SVG replaces emoji ─────────────────────────────────
+function TaxTipIcon({ type }) {
+  if (type === "ra")   return <span className="ms-tax-tip-icon-svg" style={{ background: "rgba(200,16,46,0.12)", color: R }}><Icon.FileText /></span>;
+  if (type === "tfsa") return <span className="ms-tax-tip-icon-svg" style={{ background: "rgba(29,158,117,0.12)", color: GRN }}><Icon.Briefcase /></span>;
+  if (type === "med")  return <span className="ms-tax-tip-icon-svg" style={{ background: "rgba(37,99,235,0.12)", color: BLU }}><Icon.Heart /></span>;
+  return null;
+}
+
+// ── Compute time-to-goal from monthly savings rate ───────────────────────────
+function timeToGoal(current, target, monthlyContrib) {
+  if (current >= target || monthlyContrib <= 0) return null;
+  const months = Math.ceil((target - current) / monthlyContrib);
+  if (months <= 0) return null;
+  if (months < 12) return `${months}mo`;
+  const yrs = Math.floor(months / 12);
+  const mo  = months % 12;
+  return mo > 0 ? `${yrs}yr ${mo}mo` : `${yrs}yr`;
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
 export default function MoneySnapshot() {
-  const [tab, setTab]   = useState("overview");
-  const [sl, setSl]     = useState(null);
-  const [on, setOn]     = useState(false);
+  const [tab,  setTab]  = useState("overview");
+  const [sl,   setSl]   = useState(null);
+  const [on,   setOn]   = useState(false);
   const [user, setUser] = useState(getUser());
-  const navigate        = useNavigate();
+  const navigate = useNavigate();
 
-  useEffect(() => { setTimeout(() => setOn(true), 80); }, []);
+  useEffect(() => { setTimeout(() => setOn(true), 16); }, []);
 
-  // Persist edits back to localStorage + re-derive metrics
   const handleEdit = (field, value) => {
     const updated = { ...user, [field]: value };
     setUser(updated);
     saveUser(updated);
   };
 
-  // ── Pull & derive all data ─────────────────────────────────────────────────
-  const name       = user.name       || "there";
-  const salary     = Number(user.salary)       || 48000;
-  const rent       = Number(user.rent)         || 12000;
-  const savings    = Number(user.savings)      || 20000;
-  const emergency  = Number(user.emergencyFund)|| 18000;
-  const carFin     = Number(user.carFinance)   || 6500;
-  const studLoan   = Number(user.studentLoan)  || 2500;
-  const invest     = Number(user.investments)  || 4000;
-  const trackRaw   = (user.track || "Buy property within 5 years").trim();
+  // ── Real user data ──────────────────────────────────────────────────────────
+  const name      = user.name       || "there";
+  const salary    = Number(user.salary)        || 0;
+  const rent      = Number(user.rent)          || 0;
+  const savings   = Number(user.savings)       || 0;
+  const emergency = Number(user.emergencyFund) || 0;
+  const carFin    = Number(user.carFinance)    || 0;
+  const studLoan  = Number(user.studentLoan)   || 0;
+  const invest    = Number(user.investments)   || 0;
+  const trackRaw  = (user.track || "").trim();
 
-  const trackLabel = trackRaw.includes("property") || trackRaw.includes("Property")
-    ? "Property Builder"
-    : trackRaw.includes("Balance") || trackRaw.includes("lifestyle")
-      ? "Balanced Investor"
-      : "Global Investor";
+  const trackLabel =
+    trackRaw.toLowerCase().includes("property") ? "Property Builder" :
+    trackRaw.toLowerCase().includes("balance") || trackRaw.toLowerCase().includes("lifestyle") ? "Balanced Investor" :
+    trackRaw.toLowerCase().includes("global") ? "Global Investor" : "Property Builder";
 
-  // Real SA tax metrics
-  const metrics = calcMetrics({ salary, rent, carFinance: carFin, studentLoan: studLoan, investments: invest, savings, emergencyFund: emergency });
+  const isProperty  = trackLabel === "Property Builder";
+  const isBalanced  = trackLabel === "Balanced Investor";
+  const isGlobal    = trackLabel === "Global Investor";
 
-  // 5-bucket spend categories (uses net salary)
-  const spendBuckets = calcSpendBuckets({ salary, rent, carFinance: carFin, studentLoan: studLoan, investments: invest, netSalary: metrics.netSalary });
-  const spendTotal   = spendBuckets.reduce((s, b) => s + b.value, 0);
+  // ── SA tax metrics ──────────────────────────────────────────────────────────
+  const metrics = calcMetrics({
+    salary, rent, carFinance: carFin,
+    studentLoan: studLoan, investments: invest,
+    savings, emergencyFund: emergency,
+  });
 
-  // Goals
-  const emergencyTarget = salary * 3;
-  const depositTarget   = 200000;
-  const investTarget    = 100000;
-  const goals = [
-    { name: "Emergency fund",   current: emergency, target: emergencyTarget, color: GRN, icon: "🛡️" },
-    { name: "Property deposit", current: savings,   target: depositTarget,   color: R,   icon: "🏠" },
-    { name: "Investments",      current: invest * 6,target: investTarget,    color: BLU, icon: "📈" },
+  // ── Spend buckets ───────────────────────────────────────────────────────────
+  const spendBuckets = calcSpendBuckets({
+    salary, rent, carFinance: carFin,
+    studentLoan: studLoan, investments: invest,
+    netSalary: metrics.netSalary,
+  });
+  const spendTotal = spendBuckets.reduce((s, b) => s + b.value, 0);
+
+  // ── Real goal targets derived from user data ────────────────────────────────
+  // Emergency fund: 3 months of actual essential expenses
+  const monthlyEssentials = rent + carFin + studLoan + Math.max(0, metrics.netSalary - invest - rent - carFin - studLoan) * 0.4;
+  const emergencyTarget   = Math.max(monthlyEssentials * 3, salary * 2);
+
+  // Deposit: 10% of a realistic property price for their income band
+  // (rule of thumb: ~4–5× annual salary for starter home)
+  const realisticPropPrice = salary * 12 * 4.5;
+  const depositTarget      = Math.round(realisticPropPrice * 0.1);
+
+  // Investment portfolio: 12-month run rate (meaningful near-term target)
+  const investTarget12m    = invest * 12;
+  // For balanced/global tracks, use a 24-month target
+  const investTarget       = isProperty ? investTarget12m : invest * 24;
+
+  // Global track: offshore runway target
+  const globalTarget = invest * 36;
+
+  // ── Goals — track-aware ─────────────────────────────────────────────────────
+  const goals = isGlobal ? [
+    {
+      goalKey: "emergency", name: "Emergency fund",
+      current: emergency, target: emergencyTarget, color: GRN,
+      monthlyRate: invest * 0.3,
+      timeToGoal: timeToGoal(emergency, emergencyTarget, invest * 0.3),
+    },
+    {
+      goalKey: "invest", name: "Local portfolio",
+      current: savings + invest * 6, target: investTarget, color: BLU,
+      monthlyRate: invest,
+      timeToGoal: timeToGoal(savings + invest * 6, investTarget, invest),
+    },
+    {
+      goalKey: "global", name: "Offshore portfolio",
+      current: savings * 0.3, target: globalTarget * 0.4, color: "#7C3AED",
+      monthlyRate: invest * 0.4,
+      timeToGoal: timeToGoal(savings * 0.3, globalTarget * 0.4, invest * 0.4),
+    },
+  ] : isBalanced ? [
+    {
+      goalKey: "emergency", name: "Emergency fund",
+      current: emergency, target: emergencyTarget, color: GRN,
+      monthlyRate: invest * 0.2,
+      timeToGoal: timeToGoal(emergency, emergencyTarget, invest * 0.2),
+    },
+    {
+      goalKey: "invest", name: "Investment portfolio",
+      current: savings + invest * 6, target: investTarget, color: BLU,
+      monthlyRate: invest,
+      timeToGoal: timeToGoal(savings + invest * 6, investTarget, invest),
+    },
+    {
+      goalKey: "deposit", name: "Lifestyle reserve",
+      current: Math.max(0, savings - emergency), target: salary * 3, color: AMB,
+      monthlyRate: Math.max(0, metrics.disposable * 0.3),
+      timeToGoal: timeToGoal(Math.max(0, savings - emergency), salary * 3, metrics.disposable * 0.3),
+    },
+  ] : [
+    // Property Builder (default)
+    {
+      goalKey: "emergency", name: "Emergency fund",
+      current: emergency, target: emergencyTarget, color: GRN,
+      monthlyRate: invest * 0.2,
+      timeToGoal: timeToGoal(emergency, emergencyTarget, invest * 0.2),
+    },
+    {
+      goalKey: "deposit", name: "Property deposit",
+      current: savings, target: depositTarget, color: R,
+      monthlyRate: invest * 0.6,
+      timeToGoal: timeToGoal(savings, depositTarget, invest * 0.6),
+    },
+    {
+      goalKey: "invest", name: "Investment portfolio",
+      current: invest * 6, target: investTarget12m || salary, color: BLU,
+      monthlyRate: invest,
+      timeToGoal: timeToGoal(invest * 6, investTarget12m || salary, invest),
+    },
   ];
 
-  // Smart narratives
+  // ── Narratives ──────────────────────────────────────────────────────────────
   const narratives = generateNarratives(metrics, spendBuckets);
   const { band }   = getIncomeBand(salary);
 
-  // Health score (uses real savings rate from invest, not savings balance)
+  // ── Health score ────────────────────────────────────────────────────────────
   const savingsRate = salary > 0 ? (invest / salary) * 100 : 0;
   const healthScore = Math.min(100, Math.round(
     (savingsRate >= 20 ? 25 : savingsRate * 1.25) +
@@ -205,10 +397,10 @@ export default function MoneySnapshot() {
     (metrics.disposable > 0 ? 25 : 0) +
     (metrics.debtToIncome < 15 ? 25 : metrics.debtToIncome < 30 ? 15 : 5)
   ));
-  const scoreColor = healthScore >= 75 ? GRN : healthScore >= 50 ? AMB : R;
+  const scoreColor  = healthScore >= 75 ? GRN : healthScore >= 50 ? AMB : R;
   const CIRC = 251.3;
 
-  // Net worth history (simulated 6-month trajectory)
+  // ── Wealth history (anchored to real net worth) ─────────────────────────────
   const netWorth = metrics.netWorth;
   const wealthHistory = [
     { m: "Nov", v: Math.round(netWorth * 0.62) },
@@ -219,48 +411,38 @@ export default function MoneySnapshot() {
     { m: "Apr", v: netWorth },
   ];
 
+  // ── Activity (real user figures, skip zero lines) ───────────────────────────
   const activity = [
-    { label: "Salary deposit",   amount: `+${fmt(metrics.netSalary)}`, date: "01 Apr", pos: true,  note: `After PAYE ${fmt(metrics.monthlyPAYE)} + UIF ${fmt(metrics.uif)}` },
-    { label: "Rent / Bond",      amount: `-${fmt(rent)}`,      date: "02 Apr", pos: false, note: `${spendBuckets.find(b=>b.key==="housing")?.pct ?? 0}% of take-home` },
-    { label: "Car Finance",      amount: `-${fmt(carFin)}`,    date: "03 Apr", pos: false, note: "Mobility" },
-    { label: "ETF Investment",   amount: `-${fmt(invest)}`,    date: "05 Apr", pos: false, note: `${metrics.netSavingsRate}% of net income` },
-    { label: "Student Loan",     amount: `-${fmt(studLoan)}`,  date: "06 Apr", pos: false, note: "Debt repayment" },
-  ].filter(a => !a.amount.includes("R0"));
+    { label: "Salary deposit",  amount: `+${fmt(metrics.netSalary)}`, date: "01 Apr", pos: true,  note: `After PAYE ${fmt(metrics.monthlyPAYE)} + UIF ${fmt(metrics.uif)}` },
+    rent      ? { label: "Rent / Bond",    amount: `-${fmt(rent)}`,      date: "02 Apr", pos: false, note: `${spendBuckets.find(b=>b.key==="housing")?.pct ?? 0}% of take-home` } : null,
+    carFin    ? { label: "Car Finance",    amount: `-${fmt(carFin)}`,    date: "03 Apr", pos: false, note: "Mobility" } : null,
+    invest    ? { label: "ETF Investment", amount: `-${fmt(invest)}`,    date: "05 Apr", pos: false, note: `${metrics.netSavingsRate}% of net income` } : null,
+    studLoan  ? { label: "Student Loan",   amount: `-${fmt(studLoan)}`,  date: "06 Apr", pos: false, note: "Debt repayment" } : null,
+  ].filter(Boolean);
 
-  const hour = new Date().getHours();
+  const hour     = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
-  // Key metrics cards
+  // ── Metric cards ────────────────────────────────────────────────────────────
   const metricCards = [
-    {
-      label: "Net take-home",
-      val: fmt(metrics.netSalary),
-      tag: `After ${metrics.effectiveRate}% tax`,
-      tagClass: "ms-tag-neutral",
-      delay: 0,
-    },
-    {
-      label: "Disposable income",
-      val: fmt(Math.max(0, metrics.disposable)),
-      tag: metrics.disposable > 3000 ? "Healthy buffer" : metrics.disposable > 0 ? "Tight" : "Over-committed",
-      tagClass: metrics.disposable > 3000 ? "ms-tag-pos" : "ms-tag-neg",
-      delay: 100,
-    },
-    {
-      label: "Savings rate",
-      val: `${metrics.savingsRate}%`,
-      tag: metrics.savingsRate >= 20 ? "On target" : "Below 20% goal",
-      tagClass: metrics.savingsRate >= 20 ? "ms-tag-pos" : "ms-tag-neg",
-      delay: 200,
-    },
-    {
-      label: "Debt-to-income",
-      val: `${metrics.debtToIncome}%`,
-      tag: metrics.debtToIncome < 20 ? "Low risk" : metrics.debtToIncome < 35 ? "Moderate" : "High",
-      tagClass: metrics.debtToIncome < 20 ? "ms-tag-pos" : metrics.debtToIncome < 35 ? "ms-tag-neutral" : "ms-tag-neg",
-      delay: 300,
-    },
+    { label: "Net take-home",   val: fmt(metrics.netSalary), tag: `After ${metrics.effectiveRate}% tax`, tagClass: "ms-tag-neutral", delay: 0 },
+    { label: "Disposable income", val: fmt(Math.max(0, metrics.disposable)), tag: metrics.disposable > 3000 ? "Healthy buffer" : metrics.disposable > 0 ? "Tight" : "Over-committed", tagClass: metrics.disposable > 3000 ? "ms-tag-pos" : "ms-tag-neg", delay: 40 },
+    { label: "Savings rate",    val: `${metrics.savingsRate}%`, tag: metrics.savingsRate >= 20 ? "On target" : "Below 20% goal", tagClass: metrics.savingsRate >= 20 ? "ms-tag-pos" : "ms-tag-neg", delay: 80 },
+    { label: "Debt-to-income",  val: `${metrics.debtToIncome}%`, tag: metrics.debtToIncome < 20 ? "Low risk" : metrics.debtToIncome < 35 ? "Moderate" : "High", tagClass: metrics.debtToIncome < 20 ? "ms-tag-pos" : metrics.debtToIncome < 35 ? "ms-tag-neutral" : "ms-tag-neg", delay: 120 },
   ];
+
+  // ── Goal summary cards (Goals tab) ─────────────────────────────────────────
+  const goalSummaryCards = goals.map(g => ({
+    label:  g.name,
+    v:      `${pct(g.current, g.target)}%`,
+    sub:    `${fmt(g.current)} of ${fmt(g.target)}`,
+    note:   g.current >= g.target
+              ? "Target met"
+              : g.timeToGoal
+                ? `~${g.timeToGoal} at current rate`
+                : `${fmt(Math.max(0, g.target - g.current))} remaining`,
+    c:      g.color,
+  }));
 
   return (
     <main className={`ms-main ${on ? "ms-on" : ""}`}>
@@ -279,7 +461,6 @@ export default function MoneySnapshot() {
             <span className="ms-pill ms-pill-grey">DTI {metrics.debtToIncome}%</span>
           </div>
         </div>
-
         <div className="ms-hero-score">
           <svg width="88" height="88" viewBox="0 0 88 88">
             <circle cx="44" cy="44" r="40" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="7" />
@@ -302,11 +483,7 @@ export default function MoneySnapshot() {
         {metricCards.map((c, i) => (
           <div key={i} className="ms-stat" style={{ animationDelay: `${c.delay}ms` }}>
             <p className="ms-stat-label">{c.label}</p>
-            <p className="ms-stat-val">
-              <CountUp end={typeof c.val === "string" && c.val.startsWith("R") ? parseInt(c.val.replace(/\D/g, "")) : 0}
-                pre={c.val.startsWith("R") ? "R" : ""} suf={c.val.includes("%") ? "%" : ""} />
-              {!c.val.startsWith("R") && !c.val.includes("%") ? c.val : ""}
-            </p>
+            <p className="ms-stat-val">{c.val}</p>
             <span className={`ms-stat-tag ${c.tagClass}`}>{c.tag}</span>
           </div>
         ))}
@@ -320,7 +497,7 @@ export default function MoneySnapshot() {
           { id: "tax",       label: "Tax & Pay" },
           { id: "goals",     label: "Goals" },
           { id: "activity",  label: "Activity" },
-          { id: "edit",      label: " Edit" },
+          { id: "edit",      label: "Edit" },
         ].map(t => (
           <button key={t.id} className={`ms-tab ${tab === t.id ? "ms-tab-on" : ""}`} onClick={() => setTab(t.id)}>
             {t.label}
@@ -335,19 +512,19 @@ export default function MoneySnapshot() {
             <div className="ms-g-wide ms-card">
               <div className="ms-card-head">
                 <span className="ms-card-title">Net worth growth</span>
-                <span className="ms-badge ms-badge-green">+{fmt(netWorth * 0.38)} 6-month</span>
+                <span className="ms-badge ms-badge-green">6-month</span>
               </div>
               <ResponsiveContainer width="100%" height={160}>
                 <AreaChart data={wealthHistory} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
                   <defs>
                     <linearGradient id="ag" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={R} stopOpacity={0.15} />
+                      <stop offset="5%"  stopColor={R} stopOpacity={0.15} />
                       <stop offset="95%" stopColor={R} stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                   <XAxis dataKey="m" tick={{ fontSize: 11, fill: "rgba(240,235,232,0.4)" }} axisLine={false} tickLine={false} />
-                  <YAxis tickFormatter={v => `R${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "rgba(240,235,232,0.4)" }} axisLine={false} tickLine={false} width={44} />
+                  <YAxis tickFormatter={v => `R${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10, fill: "rgba(240,235,232,0.4)" }} axisLine={false} tickLine={false} width={44} />
                   <Tooltip content={<ChartTip />} />
                   <Area type="monotone" dataKey="v" stroke={R} strokeWidth={2.5} fill="url(#ag)" dot={{ r: 4, fill: R, strokeWidth: 0 }} activeDot={{ r: 5 }} />
                 </AreaChart>
@@ -355,37 +532,45 @@ export default function MoneySnapshot() {
             </div>
 
             <div className="ms-g-half ms-card">
-              <div className="ms-card-head"><span className="ms-card-title">Monthly spend by category</span></div>
+              <div className="ms-card-head"><span className="ms-card-title">Monthly spend</span></div>
               <ResponsiveContainer width="100%" height={130}>
                 <BarChart data={[
-                  { m: "Nov", v: Math.round(spendTotal * 0.92) }, { m: "Dec", v: Math.round(spendTotal * 1.07) },
-                  { m: "Jan", v: Math.round(spendTotal * 0.97) }, { m: "Feb", v: Math.round(spendTotal * 1.01) },
-                  { m: "Mar", v: Math.round(spendTotal * 0.96) }, { m: "Apr", v: spendTotal },
+                  { m: "Nov", v: Math.round(spendTotal * 0.92) },
+                  { m: "Dec", v: Math.round(spendTotal * 1.07) },
+                  { m: "Jan", v: Math.round(spendTotal * 0.97) },
+                  { m: "Feb", v: Math.round(spendTotal * 1.01) },
+                  { m: "Mar", v: Math.round(spendTotal * 0.96) },
+                  { m: "Apr", v: spendTotal },
                 ]} barSize={16} margin={{ top: 4, right: 0, bottom: 0, left: 0 }}>
                   <XAxis dataKey="m" tick={{ fontSize: 10, fill: "rgba(240,235,232,0.4)" }} axisLine={false} tickLine={false} />
                   <YAxis hide />
                   <Tooltip content={<ChartTip />} />
                   <Bar dataKey="v" radius={[5, 5, 0, 0]}>
-                    {[0, 1, 2, 3, 4, 5].map(i => <Cell key={i} fill={i === 5 ? R : "rgba(255,255,255,0.08)"} />)}
+                    {[0,1,2,3,4,5].map(i => <Cell key={i} fill={i === 5 ? R : "rgba(255,255,255,0.07)"} />)}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
-              <p className="ms-card-foot">Apr: <strong style={{ color: R }}>{fmt(spendTotal)}</strong></p>
+              <p className="ms-card-foot">Apr total: <strong style={{ color: R }}>{fmt(spendTotal)}</strong></p>
             </div>
 
             <div className="ms-g-half ms-card">
               <div className="ms-card-head"><span className="ms-card-title">Insights</span></div>
-              {narratives.map((n, i) => (
-                <Nudge key={i} type={n.type} dot={n.type === "success" ? GRN : n.type === "warn" ? AMB : BLU} text={n.text} i={i} />
-              ))}
+              {narratives.length > 0
+                ? narratives.map((n, i) => (
+                    <Nudge key={i} type={n.type} dot={n.type === "success" ? GRN : n.type === "warn" ? AMB : BLU} text={n.text} i={i} />
+                  ))
+                : <p style={{ fontSize: 12, color: "rgba(240,235,232,0.3)" }}>Complete your profile to see personalised insights.</p>
+              }
             </div>
 
             <div className="ms-g-wide ms-card">
               <div className="ms-card-head">
-                <span className="ms-card-title">Goal progress</span>
-                <button className="ms-link" onClick={() => setTab("goals")}>View all →</button>
+                <span className="ms-card-title">Goal progress — {trackLabel}</span>
+                <button className="ms-link" onClick={() => setTab("goals")}>View all</button>
               </div>
-              {goals.map((g, i) => <GoalBar key={g.name} {...g} delay={i * 120} />)}
+              {goals.map((g, i) => (
+                <GoalBar key={g.name} {...g} delay={i * 100} />
+              ))}
             </div>
           </div>
         </div>
@@ -431,7 +616,7 @@ export default function MoneySnapshot() {
                   <div className="ms-cat-l">
                     <div className="ms-cat-dot" style={{ background: d.color }} />
                     <div>
-                      <span className="ms-cat-name">{d.icon} {d.name}</span>
+                      <span className="ms-cat-name">{d.name}</span>
                       <span className="ms-cat-bench">Bench: {d.benchmark}%</span>
                     </div>
                   </div>
@@ -444,15 +629,12 @@ export default function MoneySnapshot() {
                   </div>
                 </div>
               ))}
-              <div className="ms-spend-note">
-                <span>Benchmark is typical allocation for {band} earners in SA</span>
-              </div>
+              <div className="ms-spend-note">Benchmark is typical allocation for {band} earners in SA</div>
             </div>
 
-            {/* Narrative for spending */}
             <div className="ms-g-wide ms-card">
               <div className="ms-card-head"><span className="ms-card-title">Spending insights — {band}</span></div>
-              {generateNarratives(metrics, spendBuckets).map((n, i) => (
+              {narratives.map((n, i) => (
                 <Nudge key={i} type={n.type} dot={n.type === "success" ? GRN : n.type === "warn" ? AMB : BLU} text={n.text} i={i} />
               ))}
             </div>
@@ -468,24 +650,24 @@ export default function MoneySnapshot() {
               <div className="ms-card-head"><span className="ms-card-title">SARS tax breakdown (2024/25)</span></div>
               <TaxBreakdown metrics={metrics} />
               <div className="ms-callout" style={{ marginTop: 16 }}>
-                You're in the <strong style={{ color: AMB }}>{metrics.taxBracket}</strong>. Your effective rate is{" "}
-                <strong style={{ color: GRN }}>{metrics.effectiveRate}%</strong> — meaning you keep{" "}
-                <strong style={{ color: GRN }}>{(100 - metrics.effectiveRate).toFixed(1)}%</strong> of every rand earned.
+                You're in the <strong style={{ color: AMB }}>{metrics.taxBracket}</strong>. Effective rate{" "}
+                <strong style={{ color: GRN }}>{metrics.effectiveRate}%</strong> — you keep{" "}
+                <strong style={{ color: GRN }}>{(100 - metrics.effectiveRate).toFixed(1)}%</strong> of every rand.
               </div>
             </div>
 
             <div className="ms-g-half ms-card">
               <div className="ms-card-head"><span className="ms-card-title">Key financial metrics</span></div>
               {[
-                { label: "Gross salary",       val: fmt(salary),              note: "Before any deductions" },
-                { label: "Monthly PAYE",        val: fmt(metrics.monthlyPAYE), note: `${metrics.effectiveRate}% effective rate`, c: R },
-                { label: "UIF contribution",    val: fmt(metrics.uif),         note: "1% capped monthly", c: AMB },
-                { label: "Net take-home",       val: fmt(metrics.netSalary),   note: "Actual deposited salary", c: GRN },
-                { label: "Disposable income",   val: fmt(Math.max(0, metrics.disposable)), note: "After all commitments", c: metrics.disposable > 0 ? GRN : R },
-                { label: "Net worth (liquid)",  val: fmt(metrics.netWorth),    note: "Savings + emergency fund" },
-                { label: "Savings rate (gross)",val: `${metrics.savingsRate}%`,note: "Of gross income", c: metrics.savingsRate >= 20 ? GRN : AMB },
-                { label: "Debt-to-income",      val: `${metrics.debtToIncome}%`, note: "Debt / gross salary", c: metrics.debtToIncome < 20 ? GRN : metrics.debtToIncome < 35 ? AMB : R },
-                { label: "Emergency cover",     val: `${metrics.emergencyMonths} months`, note: "Of essential expenses", c: metrics.emergencyMonths >= 3 ? GRN : AMB },
+                { label: "Gross salary",        val: fmt(salary),                        note: "Before deductions" },
+                { label: "Monthly PAYE",         val: fmt(metrics.monthlyPAYE),           note: `${metrics.effectiveRate}% effective`,      c: R },
+                { label: "UIF",                  val: fmt(metrics.uif),                   note: "1% capped",                                c: AMB },
+                { label: "Net take-home",        val: fmt(metrics.netSalary),             note: "Actual deposited salary",                  c: GRN },
+                { label: "Disposable income",    val: fmt(Math.max(0, metrics.disposable)), note: "After all commitments",                  c: metrics.disposable > 0 ? GRN : R },
+                { label: "Net worth (liquid)",   val: fmt(metrics.netWorth),              note: "Savings + emergency fund" },
+                { label: "Savings rate (gross)", val: `${metrics.savingsRate}%`,          note: "Of gross income",                          c: metrics.savingsRate >= 20 ? GRN : AMB },
+                { label: "Debt-to-income",       val: `${metrics.debtToIncome}%`,         note: "Debt / gross salary",                      c: metrics.debtToIncome < 20 ? GRN : metrics.debtToIncome < 35 ? AMB : R },
+                { label: "Emergency cover",      val: `${metrics.emergencyMonths} months`,note: "Of essential expenses",                    c: metrics.emergencyMonths >= 3 ? GRN : AMB },
               ].map((r, i) => (
                 <div key={i} className="ms-metric-row">
                   <div>
@@ -501,12 +683,12 @@ export default function MoneySnapshot() {
               <div className="ms-card-head"><span className="ms-card-title">Tax saving opportunities</span></div>
               <div className="ms-tax-tips">
                 {[
-                  { title: "Retirement Annuity (RA)", body: `You can deduct up to 27.5% of your taxable income (max R350k/year) in RA contributions. At your income, contributing R${Math.round(salary * 0.1 * 12).toLocaleString("en-ZA")}/year could save you R${Math.round(salary * 0.1 * 12 * (metrics.marginalRate / 100)).toLocaleString("en-ZA")} in annual tax.` },
-                  { title: "Tax-Free Savings Account (TFSA)", body: "Invest up to R36 000/year (R500k lifetime) with zero tax on returns, dividends, or capital gains. Ideal for your medium-term goals." },
-                  { title: "Medical Aid Credits", body: "If you contribute to medical aid, you receive a monthly tax credit. Primary member: R364/month. First dependant: R364. Additional: R246 each." },
+                  { type: "ra",   title: "Retirement Annuity (RA)",       body: `Deduct up to 27.5% of taxable income (max R350k/year). At your income, contributing R${Math.round(salary * 0.1 * 12).toLocaleString("en-ZA")}/year saves ~R${Math.round(salary * 0.1 * 12 * (metrics.marginalRate / 100)).toLocaleString("en-ZA")} in tax.` },
+                  { type: "tfsa", title: "Tax-Free Savings Account (TFSA)", body: "Invest up to R36 000/year (R500k lifetime) with zero tax on returns, dividends, or capital gains." },
+                  { type: "med",  title: "Medical Aid Credits",             body: "Monthly credits: primary member R364, first dependant R364, additional R246 each — deducted directly from your PAYE." },
                 ].map((tip, i) => (
                   <div key={i} className="ms-tax-tip">
-                    <span className="ms-tax-tip-icon">{tip.icon}</span>
+                    <TaxTipIcon type={tip.type} />
                     <div>
                       <p className="ms-tax-tip-title">{tip.title}</p>
                       <p className="ms-tax-tip-body">{tip.body}</p>
@@ -525,38 +707,20 @@ export default function MoneySnapshot() {
           <div className="ms-grid">
             <div className="ms-g-wide ms-card">
               <div className="ms-card-head"><span className="ms-card-title">Financial goals — {trackLabel}</span></div>
-              {goals.map((g, i) => <GoalBar key={g.name} {...g} delay={i * 150} />)}
+              {goals.map((g, i) => (
+                <GoalBar key={g.name} {...g} delay={i * 120} />
+              ))}
               <div className="ms-callout">
-                On the <strong>{trackLabel}</strong> track — based on your net income of {fmt(metrics.netSalary)}/month,
-                stay consistent with monthly contributions to hit your milestones.
+                Goals are calculated from your actual salary of {fmt(salary)}/month, net take-home of {fmt(metrics.netSalary)}/month,
+                and monthly investment of {fmt(invest)}.{" "}
+                <button className="ms-link" onClick={() => setTab("edit")} style={{ display: "inline" }}>
+                  Update your figures
+                </button>{" "}
+                to recalculate in real time.
               </div>
             </div>
 
-            {[
-              {
-                label: "Emergency fund",
-                v: `${pct(emergency, emergencyTarget)}%`,
-                sub: `${fmt(emergency)} of ${fmt(emergencyTarget)}`,
-                note: emergency >= emergencyTarget
-                  ? "Complete! 3 months covered"
-                  : `${metrics.emergencyMonths} months covered — target 3`,
-                c: GRN,
-              },
-              {
-                label: "Property deposit",
-                v: `${pct(savings, depositTarget)}%`,
-                sub: `${fmt(savings)} of ${fmt(depositTarget)}`,
-                note: "On track for Year 4 milestone",
-                c: R,
-              },
-              {
-                label: "Investments",
-                v: `${pct(invest * 6, investTarget)}%`,
-                sub: `${fmt(invest * 6)} of ${fmt(investTarget)}`,
-                note: `+${fmt(invest)}/month invested`,
-                c: BLU,
-              },
-            ].map(x => (
+            {goalSummaryCards.map(x => (
               <div key={x.label} className="ms-g-third ms-card ms-summary-card" style={{ borderTop: `3px solid ${x.c}` }}>
                 <p className="ms-summary-label">{x.label}</p>
                 <p className="ms-summary-val" style={{ color: x.c }}>{x.v}</p>
@@ -577,7 +741,7 @@ export default function MoneySnapshot() {
               {activity.map((a, i) => (
                 <div key={i} className="ms-act" style={{ animationDelay: `${i * 0.06}s` }}>
                   <div className="ms-act-av" style={{ background: a.pos ? "rgba(29,158,117,0.1)" : "rgba(200,16,46,0.08)" }}>
-                    <span style={{ color: a.pos ? GRN : R }}>{a.pos ? "↑" : "↓"}</span>
+                    <span style={{ color: a.pos ? GRN : R, fontSize: 16, fontWeight: 700 }}>{a.pos ? "+" : "−"}</span>
                   </div>
                   <div className="ms-act-info">
                     <p className="ms-act-name">{a.label}</p>
@@ -600,19 +764,19 @@ export default function MoneySnapshot() {
                 <span className="ms-card-title">Update your snapshot</span>
                 <span className="ms-badge ms-badge-green">Auto-saves instantly</span>
               </div>
-              <p className="ms-edit-desc">Click any field to edit — changes reflect across the app immediately.</p>
+              <p className="ms-edit-desc">Click any field to edit. All goals, charts, and metrics recalculate immediately.</p>
               <div className="ms-edit-grid">
-                <EditField label="First name"           field="name"          value={user.name || ""}          type="text"   onChange={handleEdit} />
-                <EditField label="Monthly gross salary" field="salary"        value={salary}                                 onChange={handleEdit} />
-                <EditField label="Monthly rent / bond"  field="rent"          value={rent}                                   onChange={handleEdit} />
-                <EditField label="Car finance"          field="carFinance"    value={carFin}                                 onChange={handleEdit} />
-                <EditField label="Student loan"         field="studentLoan"   value={studLoan}                               onChange={handleEdit} />
-                <EditField label="Monthly investments"  field="investments"   value={invest}                                 onChange={handleEdit} />
-                <EditField label="Current savings"      field="savings"       value={savings}                                onChange={handleEdit} />
-                <EditField label="Emergency fund"       field="emergencyFund" value={emergency}                              onChange={handleEdit} />
+                <EditField label="First name"           field="name"          value={user.name || ""}  type="text" onChange={handleEdit} />
+                <EditField label="Monthly gross salary" field="salary"        value={salary}                       onChange={handleEdit} />
+                <EditField label="Monthly rent / bond"  field="rent"          value={rent}                         onChange={handleEdit} />
+                <EditField label="Car finance"          field="carFinance"    value={carFin}                       onChange={handleEdit} />
+                <EditField label="Student loan"         field="studentLoan"   value={studLoan}                     onChange={handleEdit} />
+                <EditField label="Monthly investments"  field="investments"   value={invest}                       onChange={handleEdit} />
+                <EditField label="Current savings"      field="savings"       value={savings}                      onChange={handleEdit} />
+                <EditField label="Emergency fund"       field="emergencyFund" value={emergency}                    onChange={handleEdit} />
               </div>
               <div className="ms-callout" style={{ marginTop: 16 }}>
-                Changes save instantly to your local profile. All calculations and charts update automatically.
+                Changes save instantly. Goal targets update to reflect your real income and spending patterns.
               </div>
             </div>
           </div>
@@ -620,7 +784,7 @@ export default function MoneySnapshot() {
       )}
 
       <button className="ms-cta" onClick={() => navigate("/simulation")}>
-        Open Simulation Lab — Property vs Renting →
+        Open Simulation Lab — model your next financial move
       </button>
     </main>
   );
