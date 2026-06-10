@@ -236,7 +236,7 @@ function TaxBreakdown({ metrics }) {
   );
 }
 
-// ── Tax tip icon — pure SVG replaces emoji ─────────────────────────────────
+// ── Tax tip icon — pure SVG replaces emoji
 function TaxTipIcon({ type }) {
   if (type === "ra")   return <span className="ms-tax-tip-icon-svg" style={{ background: "rgba(200,16,46,0.12)", color: R }}><Icon.FileText /></span>;
   if (type === "tfsa") return <span className="ms-tax-tip-icon-svg" style={{ background: "rgba(29,158,117,0.12)", color: GRN }}><Icon.Briefcase /></span>;
@@ -244,7 +244,7 @@ function TaxTipIcon({ type }) {
   return null;
 }
 
-// ── Compute time-to-goal from monthly savings rate ───────────────────────────
+// ── Compute time-to-goal from monthly savings rate 
 function timeToGoal(current, target, monthlyContrib) {
   if (current >= target || monthlyContrib <= 0) return null;
   const months = Math.ceil((target - current) / monthlyContrib);
@@ -271,7 +271,7 @@ export default function MoneySnapshot() {
     saveUser(updated);
   };
 
-  // ── Real user data ──────────────────────────────────────────────────────────
+  // ── Real user data
   const name      = user.name       || "there";
   const salary    = Number(user.salary)        || 0;
   const rent      = Number(user.rent)          || 0;
@@ -291,7 +291,7 @@ export default function MoneySnapshot() {
   const isBalanced  = trackLabel === "Balanced Investor";
   const isGlobal    = trackLabel === "Global Investor";
 
-  // ── SA tax metrics ──────────────────────────────────────────────────────────
+  // ── SA tax metrics 
   const metrics = calcMetrics({
     salary, rent, carFinance: carFin,
     studentLoan: studLoan, investments: invest,
@@ -324,7 +324,7 @@ export default function MoneySnapshot() {
   // Global track: offshore runway target
   const globalTarget = invest * 36;
 
-  // ── Goals — track-aware ─────────────────────────────────────────────────────
+  // ── Goals — track-aware 
   const goals = isGlobal ? [
     {
       goalKey: "emergency", name: "Emergency fund",
